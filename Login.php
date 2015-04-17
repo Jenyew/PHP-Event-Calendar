@@ -15,23 +15,24 @@ and open the template in the editor.
             <input type ="password" placeholder ="password" name ="password">
             <input type ="submit" value ="login">    
         </form>
-        <pre>
         <?php
         // put your code here
        include("lib/Users.php");
        $loggedIn = logIn($_POST["username"],$_POST["password"]);
-       if ($loggedIn) {
-           print "I am logged in!";
+       if ($loggedIn["success"]) {
+           print "I am logged in!<br />";
          
        } else {
-           print "I am not logged in. D=";
+           print "I am not logged in. D= <br />";
+           print $loggedIn["errorMessage"];
        }
         $_POST["face"]["something"] = "Hello";
-       print_r ($_POST);
+       print "<pre>";
+        print_r ($_POST);
+       print "</pre>";
        print "My Username is " . $_POST["username"];
        print "<br />";
        print "My Password is " . $_POST["face"]["something"];
         ?>
-        </pre>
     </body>
 </html>

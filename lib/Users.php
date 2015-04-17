@@ -7,16 +7,16 @@
  */
 function logIn($username,$pass) {
     //check if username exists
-    $userExists = true;
+    $userExists = false;
     if ($userExists) {
             //get user_pass
         $userPass = "password";
         if ($userPass == $pass) {
-            return true;
+            return array("success" => true, "errorMessage" => "");
         } else {
-            return false;
+            return array("success" => false, "errorMessage" => "Incorrect password!");
         }
     } else {
-        return false;
+        return array("success" => false, "errorMessage" => "Incorrect username!");
     }
 }
