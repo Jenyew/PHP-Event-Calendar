@@ -7,3 +7,13 @@
  */
 
 session_start();
+
+ //DB configuration Constants
+ define('_HOST_NAME_', 'localhost:3306');
+ define('_USER_NAME_', 'XXXXXX');
+ define('_DB_PASSWORD_', 'XXXXXX');
+ define('_DATABASE_NAME_', 'XXXXXXX');
+ 
+ //add includes here
+define('APPLICATION_PATH', dirname( __FILE__ ) .DIRECTORY_SEPARATOR );
+require_once(APPLICATION_PATH.DIRECTORY_SEPARATOR."DB.php");
