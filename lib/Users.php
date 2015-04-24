@@ -77,3 +77,8 @@ function deleteUser() {
 function loadAllUsers() {
     //Load data for all users from database.
 }
+
+function showProfile() {
+    //Show profile in main part of dashboard.
+    print "This is my profile!";
+}
