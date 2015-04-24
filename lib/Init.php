@@ -15,3 +15,5 @@ session_start();
  define('_DATABASE_NAME_', 'XXXXXXX');
  
  //add includes here
+define('APPLICATION_PATH', dirname( __FILE__ ) .DIRECTORY_SEPARATOR );
+require_once(APPLICATION_PATH.DIRECTORY_SEPARATOR."DB.php");
