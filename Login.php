@@ -1,7 +1,7 @@
 <?php
         include("lib/Init.php");
         if (isset($_POST['submit'])) {
-           $loggedIn = logIn($_POST["username"],$_POST["password"]);
+           $loggedIn = logIn($_POST["email"],$_POST["password"]);
             if ($loggedIn["success"]) {
                 print "I am logged in!<br />";
 
@@ -12,10 +12,12 @@
         }
        
        $db = new DB;
-       $db->queryAssoc("select email from users where email = \"test2@test.com\" ", array());
+       $db->queryAssoc("select email, password from users where email = \"test2@test.com\" ", array());
        $result = $db->resultsArray;
        print "<pre>";
         print_r ($result);
+        print "<br />";
+        print_r ($_POST);
         //Try to make the login function work in Users.php
        
        /*
@@ -51,9 +53,9 @@ and open the template in the editor.
     </head>
     <body>
         <form action ="login.php" method ="POST" name ="login">
-            <input type ="text" placeholder ="username" name ="username">
+            <input type ="text" placeholder ="email" name ="email">
             <input type ="password" placeholder ="password" name ="password">
-            <input type ="submit" value ="login">    
+            <input type ="submit" value ="login" name="submit">    
         </form>
     </body>
 </html>

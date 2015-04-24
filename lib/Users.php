@@ -29,15 +29,17 @@ function logIn($email,$pass) {
     
         
     $db = new DB;
-    $db->queryAssoc("select email, password from users where email = $email", array());
+    $db->queryAssoc("select email, password from users where email = :email ", array("email" => $email));
     //If the email exists, it will return a row and count would be 1.
     if ($db->count < 1) {
         return array("success" => false, "errorMessage" => "Email does not exist.");
     }
     $result = $db->resultsArray[0];
+
     
-    if ($pass === $result[password]) {
+    if ($pass === $result["password"]) {
         //Checks if password entered matches actual password taken from database.
+        $_SESSION["userLoggedIn"] = true;
             return array("success" => true, "errorMessage" => "");
     } else {
             return array("success" => false, "errorMessage" => "Incorrect password!");
