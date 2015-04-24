@@ -7,3 +7,11 @@
  */
 
 session_start();
+
+ //DB configuration Constants
+ define('_HOST_NAME_', 'localhost:3306');
+ define('_USER_NAME_', 'XXXXXX');
+ define('_DB_PASSWORD_', 'XXXXXX');
+ define('_DATABASE_NAME_', 'XXXXXXX');
+ 
+ //add includes here
