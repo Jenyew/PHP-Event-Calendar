@@ -24,9 +24,10 @@ class DB {
             $_sql = ''; // string - last sql string
 
  
-    public function __construct($dsn, $user, $pass, $options  = array()) {
+    public function __construct() {
         try {
-            $this->_pdo = new PDO($dsn, $user, $pass, $options);
+            $this->_pdo = new PDO('mysql:host='._HOST_NAME_.';dbname='._DATABASE_NAME_,
+    						_USER_NAME_,_DB_PASSWORD_,NULL);
         } catch(PDOException $e) {
         	$this->errorMessage = $e->getMessage();
             $this->error = true;
