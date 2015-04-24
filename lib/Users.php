@@ -11,28 +11,36 @@
 /**
  * Logs in the user by checking whether the username exists in the database first
  * then by checking if the password matches the database password.
- * @param string $username  The user logging in.
+ * @param string $email  The user logging in.
  * @param string $pass  Their password.
  * @return array  Success boolean on whether or not login was valid and errorMessage.
  */
-function logIn($username,$pass) {
+function logIn($email,$pass) {
     //check if username exists
-    $db = new PDO('mysql:host=localhost;dbname=testdb;charset=utf8', 'root', '');
-    $result = $db->query("SELECT * FROM table");
-    print_r($result);
-    //Create a fake php file to print this.
+    $email = trim($email);
+    $pass = trim($pass);
+    if ($email == "") {
+        return array("success" => false, "errorMessage" => "Email cannot be blank.");
+    }
+    if ($pass == "") {
+        return array("success" => false, "errorMessage" => "Password cannot be blank.");
+    }
     
-    $userExists = false;
-    if ($userExists) {
-            //get user_pass
-        $userPass = "password";
-        if ($userPass == $pass) {
+    
+        
+    $db = new DB;
+    $db->queryAssoc("select email, password from users where email = $email", array());
+    //If the email exists, it will return a row and count would be 1.
+    if ($db->count < 1) {
+        return array("success" => false, "errorMessage" => "Email does not exist.");
+    }
+    $result = $db->resultsArray[0];
+    
+    if ($pass === $result[password]) {
+        //Checks if password entered matches actual password taken from database.
             return array("success" => true, "errorMessage" => "");
-        } else {
-            return array("success" => false, "errorMessage" => "Incorrect password!");
-        }
     } else {
-        return array("success" => false, "errorMessage" => "Incorrect username!");
+            return array("success" => false, "errorMessage" => "Incorrect password!");
     }
 }
 
