@@ -1,9 +1,7 @@
 <?php
     include ("lib/Init.php");
 
-
-
-
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -90,8 +88,23 @@
           if ($_GET["view"] === "profile") {
               showProfile();
           }
-          if ($_GET["view"] === "profile") {
-              showProfile();
+          if ($_GET["view"] === "addEvent") {
+              showAddEvent();
+          }
+          if ($_GET["view"] === "allEvents") {
+              showAllEvents();
+          }
+          if ($_GET["view"] === "allCategories") {
+              showAllCategories();
+          }
+          if ($_GET["view"] === "account") {
+              showAccount();
+          }
+          if ($_GET["view"] === "users") {
+              showUsers();
+          }
+          if ($_GET["view"] === "newUser") {
+              showNewUser();
           }
           
           ?>

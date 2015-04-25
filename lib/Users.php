@@ -6,8 +6,6 @@
  * and open the template in the editor.
  */
 
-
-
 /**
  * Logs in the user by checking whether the username exists in the database first
  * then by checking if the password matches the database password.
@@ -15,6 +13,7 @@
  * @param string $pass  Their password.
  * @return array  Success boolean on whether or not login was valid and errorMessage.
  */
+
 function logIn($email,$pass) {
     //check if username exists
     $email = trim($email);
@@ -81,4 +80,19 @@ function loadAllUsers() {
 function showProfile() {
     //Show profile in main part of dashboard.
     print "This is my profile!";
+}
+
+function showAccount() {
+    //Show account info in main part of dashboard.
+    print "This is my account info!";
+}
+
+function showUsers() {
+    //Show all users in main part of dashboard.
+    print "These are all the users!";
+}
+
+function showNewUser() {
+    //Show create new user in main part of dashboard.
+    print "This is where I create new users!";
 }
