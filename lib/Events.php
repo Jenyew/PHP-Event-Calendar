@@ -6,3 +6,12 @@
  * and open the template in the editor.
  */
 
+function showAddEvent() {
+    //Show add event in main part of dashboard.
+    print "This is where I add an event!";
+}
+
+function showAllEvents() {
+    //Show all events in main part of dashboard.
+    print "These are all of the events!";
+}
