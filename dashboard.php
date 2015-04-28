@@ -83,8 +83,11 @@
           <h1 class="page-header">Dashboard</h1>
           <?php
           print "<br /><pre>";
+          $test = password_hash("password", PASSWORD_BCRYPT);
+          $_GET["match"] = password_verify("password", $test);
           print_r ($_GET);
           print "</pre>";
+          if (isset($_GET["view"])){
           if ($_GET["view"] === "profile") {
               showProfile();
           }
@@ -104,9 +107,15 @@
               showUsers();
           }
           if ($_GET["view"] === "newUser") {
+              if (isset($_POST["submit"])) {
+                  $data = showNewUser($_POST);
+                            print_r ($data);
+
+              } else {
               showNewUser();
+              }
           }
-          
+          }
           ?>
 <!--
           <div class="row placeholders">
