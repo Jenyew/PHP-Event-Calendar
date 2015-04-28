@@ -36,7 +36,7 @@ function logIn($email,$pass) {
     $result = $db->resultsArray[0];
 
     
-    if ($pass === $result["password"]) {
+    if (password_verify ($pass, $result["password"])) {
         //Checks if password entered matches actual password taken from database.
         $_SESSION["userLoggedIn"] = true;
             return array("success" => true, "errorMessage" => "");
@@ -92,7 +92,29 @@ function showUsers() {
     print "These are all the users!";
 }
 
-function showNewUser() {
+function showNewUser($data = array()) {
     //Show create new user in main part of dashboard.
     print "This is where I create new users!";
+    //Need email, first name, last name, password.
+    if ($data["password"] !== $data["password2"]) {
+        $data["error"] = true;
+        $data["errorMessage"] = "Passwords do not match.";
+    }
+    print '<form class="form-signin" action ="dashboard.php?view=newUser" method ="POST" name ="new_user">
+        <h2 class="form-signin-heading">Please Enter New User Information</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input name="email"  value="'.$data["email"].'" type="email" id="inputEmail" class="form-control" placeholder ="Email" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <label for="inputPassword2" class="sr-only">Password2</label>
+        <input name="password2" type="password" id="inputPassword2" class="form-control" placeholder="Re-Enter Password" required>
+        <label for="inputFirstName" class="sr-only">First Name</label>
+        <input name="first_name" value="'.$data["first_name"].'" type="text" id="inputFirstName" class="form-control" placeholder="First Name" required>
+        <label for="inputLastName" class="sr-only">Last Name</label>
+        <input name="last_name" value="'.$data["last_name"].'" type="text" id="inputLastName" class="form-control" placeholder="Last Name" required>
+        <div class="checkbox">
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit">Create New User</button>
+      </form>';
+    return $data;
 }
