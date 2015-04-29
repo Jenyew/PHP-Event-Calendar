@@ -25,8 +25,6 @@ function logIn($email,$pass) {
         return array("success" => false, "errorMessage" => "Password cannot be blank.");
     }
     
-    
-        
     $db = new DB;
     $db->queryAssoc("select email, password from users where email = :email ", array("email" => $email));
     //If the email exists, it will return a row and count would be 1.
@@ -34,7 +32,6 @@ function logIn($email,$pass) {
         return array("success" => false, "errorMessage" => "Email does not exist.");
     }
     $result = $db->resultsArray[0];
-
     
     if (password_verify ($pass, $result["password"])) {
         //Checks if password entered matches actual password taken from database.
@@ -64,7 +61,45 @@ function loadUserData() {
     //Load data from a row for user from database.
 }
 
-function createUser() {
+function createUser($data) {
+    if ($data != array()) {
+        $data["error"] = false;
+        $data["email"] = trim($data["email"]);
+        $data["password"] = trim($data["password"]);
+        $data["password2"] = trim($data["password2"]);
+        $data["first_name"] = trim($data["first_name"]);
+        $data["last_name"] = trim($data["last_name"]);
+        if ($data["email"] == "") {
+            $data["error"] = true;
+            $data["errorMessage"] = "Email cannot be empty.";
+        }
+        if ($data["password"] == "") {
+            $data["error"] = true;
+            $data["errorMessage"] = "Password cannot be empty.";
+        }
+        if ($data["first_name"] == "") {
+            $data["error"] = true;
+            $data["errorMessage"] = "Please enter first name.";
+        }
+        if ($data["last_name"] == "") {
+            $data["error"] = true;
+            $data["errorMessage"] = "Please enter last name.";
+        }
+        if ($data["password"] !== $data["password2"]) {
+            $data["error"] = true;
+            $data["errorMessage"] = "Passwords do not match.";
+        }
+        if ($data["error"]) {
+            return $data;
+        }
+        $db = new DB;
+        $db->queryAssoc("insert email, password, first_name, last_name to users", array("email" => $email));
+        //If the email exists, it will return a row and count would be 1.
+        if ($db->count < 1) {
+            return array("success" => false, "errorMessage" => "Email does not exist.");
+        }
+        $result = $db->resultsArray[0];        
+        }
     //Validate user input
     //and insert new row to database.
 }
@@ -93,13 +128,42 @@ function showUsers() {
 }
 
 function showNewUser($data = array()) {
+    if ($data != array()) {
+        $data["error"] = false;
+        $data["email"] = trim($data["email"]);
+        $data["password"] = trim($data["password"]);
+        $data["password2"] = trim($data["password2"]);
+        $data["first_name"] = trim($data["first_name"]);
+        $data["last_name"] = trim($data["last_name"]);
+        if ($data["email"] == "") {
+            $data["error"] = true;
+            $data["errorMessage"] = "Email cannot be empty.";
+        }
+        if ($data["password"] == "") {
+            $data["error"] = true;
+            $data["errorMessage"] = "Password cannot be empty.";
+        }
+        if ($data["first_name"] == "") {
+            $data["error"] = true;
+            $data["errorMessage"] = "Please enter first name.";
+        }
+        if ($data["last_name"] == "") {
+            $data["error"] = true;
+            $data["errorMessage"] = "Please enter last name.";
+        }
+        if ($data["password"] !== $data["password2"]) {
+            $data["error"] = true;
+            $data["errorMessage"] = "Passwords do not match.";
+        }
+        if (!$data["error"]) {
+            print "Thank you";
+            return $data;
+        }
+        
+    }
     //Show create new user in main part of dashboard.
     print "This is where I create new users!";
     //Need email, first name, last name, password.
-    if ($data["password"] !== $data["password2"]) {
-        $data["error"] = true;
-        $data["errorMessage"] = "Passwords do not match.";
-    }
     print '<form class="form-signin" action ="dashboard.php?view=newUser" method ="POST" name ="new_user">
         <h2 class="form-signin-heading">Please Enter New User Information</h2>
         <label for="inputEmail" class="sr-only">Email address</label>
