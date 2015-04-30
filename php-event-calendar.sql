@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2015 at 07:24 AM
+-- Generation Time: Apr 30, 2015 at 05:32 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -72,12 +72,21 @@ CREATE TABLE IF NOT EXISTS `events` (
 CREATE TABLE IF NOT EXISTS `permissions` (
   `handle` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` smallint(5) unsigned NOT NULL,
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned DEFAULT NULL,
   `type` varchar(255) NOT NULL,
   `level` varchar(255) NOT NULL,
   `expire` datetime DEFAULT NULL,
   PRIMARY KEY (`handle`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `permissions`
+--
+
+INSERT INTO `permissions` (`handle`, `user_id`, `id`, `type`, `level`, `expire`) VALUES
+(1, 1, NULL, 'USER', 'ADMIN', NULL),
+(2, 1, 1, 'CATEGORY', 'ADMIN', NULL),
+(3, 1, 1, 'EVENT', 'ADMIN', NULL);
 
 -- --------------------------------------------------------
 
@@ -93,6 +102,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` char(128) NOT NULL COMMENT 'User Password',
   `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Date/Time User Is Created',
   `lastLogin` datetime DEFAULT NULL COMMENT 'User Last Loged In',
+  `active` tinyint(1) NOT NULL COMMENT 'If the account is active',
+  `expires` datetime DEFAULT NULL COMMENT 'When the account expires',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
@@ -100,9 +111,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `firstName`, `lastName`, `password`, `created`, `lastLogin`) VALUES
-(1, 'test@test.com', 'John', 'Smith', 'Password1', '2015-04-23 17:36:20', NULL),
-(2, 'test2@test.com', 'Jane', 'Smith', 'password2', '2015-04-23 17:52:29', NULL);
+INSERT INTO `users` (`id`, `email`, `firstName`, `lastName`, `password`, `created`, `lastLogin`, `active`, `expires`) VALUES
+(1, 'test@test.com', 'John', 'Smith', 'Password1', '2015-04-23 17:36:20', NULL, 1, NULL),
+(2, 'test2@test.com', 'Jane', 'Smith', 'password2', '2015-04-23 17:52:29', NULL, 1, NULL);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

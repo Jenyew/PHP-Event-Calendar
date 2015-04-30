@@ -236,10 +236,16 @@ function showNewUser($data = array()) {
             return $data;
         }
         
+    } else {
+        $data["email"] = "";
+        $data["first_name"] = "";
+        $data["last_name"] = "";
+        
     }
     //Show create new user in main part of dashboard.
     print "This is where I create new users!";
     //Need email, first name, last name, password.
+    loadPermissions();
     print '<form class="form-signin" action ="dashboard.php?view=newUser" method ="POST" name ="new_user">
         <h2 class="form-signin-heading">Please Enter New User Information</h2>
         <label for="inputEmail" class="sr-only">Email address</label>
