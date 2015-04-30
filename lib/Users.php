@@ -26,7 +26,7 @@ function logIn($email,$pass) {
     }
     
     $db = new DB;
-    $db->queryAssoc("select email, password from users where email = :email ", array("email" => $email));
+    $db->queryAssoc("select * from users where email = :email ", array("email" => $email));
     //If the email exists, it will return a row and count would be 1.
     if ($db->count < 1) {
         return array("success" => false, "errorMessage" => "Email does not exist.");
@@ -35,7 +35,25 @@ function logIn($email,$pass) {
     
     if (password_verify ($pass, $result["password"])) {
         //Checks if password entered matches actual password taken from database.
+        
+        //check if user account is active
+        if (!$result["active"]) {
+            return array("success" => false, "errorMessage" => "This account has been disabled. Please contact and administrator.");
+        }
+        
+        //check if account has expired
+        //if ( expire time is < current time) {
+            //update database: set account active to false.
+            //error message and return "Your account has expired. Please contact and administrator."
+        //}
+        
+        //save user info in SESSION
         $_SESSION["userLoggedIn"] = true;
+        $_SESSION["uid"] = $result["uid"];
+        $_SESSION["email"] = $result["email"];
+        $_SESSION["first_name"] = $result["first_name"];
+        $_SESSION["last_name"] = $result["last_name"];
+        
             return array("success" => true, "errorMessage" => "");
     } else {
             return array("success" => false, "errorMessage" => "Incorrect password!");
@@ -89,11 +107,29 @@ function createUser($data) {
             $data["error"] = true;
             $data["errorMessage"] = "Passwords do not match.";
         }
+        
+        //check perms
+        loadPermissions();
+        //if ($_SESSION["permissions"]["user"]~["perms"] != True) {
+            //$data["error"] = true;
+            //$data["errorMessage"] = "You do not have permission to create users.";
+        //}
+        
+        
+        
+        
         if ($data["error"]) {
             return $data;
         }
         $db = new DB;
-        $db->queryAssoc("insert email, password, first_name, last_name to users", array("email" => $email));
+        //$params will be safely injected into the query where :index = the value of that index in the array.
+        $params = array("email" => $data["email"],
+                        "password" => password_hash($data["password"], PASSWORD_BCRYPT),
+                        "firstname" => $data["first_name"],
+                        "lastname" => $data["last_name"],
+                        "createdby" => $_SESSION["uid"]);
+        $db->queryAssoc("INSERT INTO users (email, password, first_name, last_name) VALUES ( :email , :password , :firstname , :lastname ) ", $params);
+        
         //If the email exists, it will return a row and count would be 1.
         if ($db->count < 1) {
             return array("success" => false, "errorMessage" => "Email does not exist.");
@@ -125,6 +161,46 @@ function showAccount() {
 function showUsers() {
     //Show all users in main part of dashboard.
     print "These are all the users!";
+    print '
+
+          <h2 class="sub-header">All Users</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Active</th>
+                  <th> </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>foo@test.com</td>
+                  <td>John</td>
+                  <td>Smith</td>
+                  <td><span class="label label-success">Active</span></td>
+                  <td><button type="button" class="btn btn-xs btn-info">Edit User</button></td>
+                </tr>
+                <tr>
+                  <td>bar@test.com</td>
+                  <td>Jane</td>
+                  <td>Anderson</td>
+                  <td><span class="label label-success">Active</span></td>
+                  <td><button type="button" class="btn btn-xs btn-info">Edit User</button></td>
+                </tr>
+                <tr>
+                  <td>test@test.com</td>
+                  <td>Gary</td>
+                  <td>White</td>
+                  <td><span class="label label-danger">Disabled</span></td>
+                  <td><button type="button" class="btn btn-xs btn-info">Edit User</button></td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>';
 }
 
 function showNewUser($data = array()) {
