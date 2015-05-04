@@ -49,10 +49,10 @@ function logIn($email,$pass) {
         
         //save user info in SESSION
         $_SESSION["userLoggedIn"] = true;
-        $_SESSION["uid"] = $result["uid"];
+        $_SESSION["uid"] = $result["id"];
         $_SESSION["email"] = $result["email"];
-        $_SESSION["first_name"] = $result["first_name"];
-        $_SESSION["last_name"] = $result["last_name"];
+        $_SESSION["first_name"] = $result["firstName"];
+        $_SESSION["last_name"] = $result["lastName"];
         
             return array("success" => true, "errorMessage" => "");
     } else {
@@ -80,64 +80,73 @@ function loadUserData() {
 }
 
 function createUser($data) {
-    if ($data != array()) {
-        $data["error"] = false;
-        $data["email"] = trim($data["email"]);
-        $data["password"] = trim($data["password"]);
-        $data["password2"] = trim($data["password2"]);
-        $data["first_name"] = trim($data["first_name"]);
-        $data["last_name"] = trim($data["last_name"]);
-        if ($data["email"] == "") {
-            $data["error"] = true;
-            $data["errorMessage"] = "Email cannot be empty.";
-        }
-        if ($data["password"] == "") {
-            $data["error"] = true;
-            $data["errorMessage"] = "Password cannot be empty.";
-        }
-        if ($data["first_name"] == "") {
-            $data["error"] = true;
-            $data["errorMessage"] = "Please enter first name.";
-        }
-        if ($data["last_name"] == "") {
-            $data["error"] = true;
-            $data["errorMessage"] = "Please enter last name.";
-        }
-        if ($data["password"] !== $data["password2"]) {
-            $data["error"] = true;
-            $data["errorMessage"] = "Passwords do not match.";
-        }
-        
-        //check perms
-        loadPermissions();
-        //if ($_SESSION["permissions"]["user"]~["perms"] != True) {
-            //$data["error"] = true;
-            //$data["errorMessage"] = "You do not have permission to create users.";
-        //}
-        
-        
-        
-        
-        if ($data["error"]) {
-            return $data;
-        }
-        $db = new DB;
-        //$params will be safely injected into the query where :index = the value of that index in the array.
-        $params = array("email" => $data["email"],
-                        "password" => password_hash($data["password"], PASSWORD_BCRYPT),
-                        "firstname" => $data["first_name"],
-                        "lastname" => $data["last_name"],
-                        "createdby" => $_SESSION["uid"]);
-        $db->queryAssoc("INSERT INTO users (email, password, first_name, last_name) VALUES ( :email , :password , :firstname , :lastname ) ", $params);
-        
-        //If the email exists, it will return a row and count would be 1.
-        if ($db->count < 1) {
-            return array("success" => false, "errorMessage" => "Email does not exist.");
-        }
-        $result = $db->resultsArray[0];        
-        }
-    //Validate user input
-    //and insert new row to database.
+    if ($data == array()) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Create User array cannot have no arguments.";
+        return;
+    }
+    //check perms
+    loadPermissions();
+    if (!isset ($_SESSION["permissions"]["USER"]["ADMIN"])) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "You do not have permission to create users.";
+        return $data;
+    }
+    if ($_SESSION["permissions"]["USER"]["ADMIN"] !== true) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "You do not have permission to create users.";
+        return $data;
+    }
+    
+    $data["error"] = false;
+    $data["email"] = trim($data["email"]);
+    $data["password"] = trim($data["password"]);
+    $data["password2"] = trim($data["password2"]);
+    $data["first_name"] = trim($data["first_name"]);
+    $data["last_name"] = trim($data["last_name"]);
+    if ($data["email"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Email cannot be empty.";
+    }
+    if ($data["password"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Password cannot be empty.";
+    }
+    if ($data["first_name"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Please enter first name.";
+    }
+    if ($data["last_name"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Please enter last name.";
+    }
+    if ($data["password"] !== $data["password2"]) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Passwords do not match.";
+    }
+
+
+
+
+
+    if ($data["error"]) {
+        return $data;
+    }
+    $db = new DB;
+    //$params will be safely injected into the query where :index = the value of that index in the array.
+    $params = array("email" => $data["email"],
+                    "password" => password_hash($data["password"], PASSWORD_BCRYPT),
+                    "firstname" => $data["first_name"],
+                    "lastname" => $data["last_name"]);
+    $db->sqlSave("INSERT INTO users (email, password, firstName, lastName, active) VALUES ( :email , :password , :firstname , :lastname , \"1\" ) ", $params);
+    
+    if ($db->error){
+        $data["error"] = true;
+        $data["errorMessage"][] = $db->errorMessage;
+        return $data;
+    }
+   $data["error"] = false;
+   return $data;
 }
 
 function deleteUser() {
@@ -204,8 +213,16 @@ function showUsers() {
 }
 
 function showNewUser($data = array()) {
+    $_SESSION["uid"] = "1";
     if ($data != array()) {
+        //clear errors
         $data["error"] = false;
+        $data["errorMessage"] = array();
+        
+        
+        
+        
+        
         $data["email"] = trim($data["email"]);
         $data["password"] = trim($data["password"]);
         $data["password2"] = trim($data["password2"]);
@@ -213,28 +230,38 @@ function showNewUser($data = array()) {
         $data["last_name"] = trim($data["last_name"]);
         if ($data["email"] == "") {
             $data["error"] = true;
-            $data["errorMessage"] = "Email cannot be empty.";
+            $data["errorMessage"][] = "Email cannot be empty.";
         }
         if ($data["password"] == "") {
             $data["error"] = true;
-            $data["errorMessage"] = "Password cannot be empty.";
+            $data["errorMessage"][] = "Password cannot be empty.";
         }
         if ($data["first_name"] == "") {
             $data["error"] = true;
-            $data["errorMessage"] = "Please enter first name.";
+            $data["errorMessage"][] = "Please enter first name.";
         }
         if ($data["last_name"] == "") {
             $data["error"] = true;
-            $data["errorMessage"] = "Please enter last name.";
+            $data["errorMessage"][] = "Please enter last name.";
         }
         if ($data["password"] !== $data["password2"]) {
             $data["error"] = true;
-            $data["errorMessage"] = "Passwords do not match.";
+            $data["errorMessage"][] = "Passwords do not match.";
         }
         if (!$data["error"]) {
-            print "Thank you";
+            $data = createUser($data);
+        }
+        if (!$data["error"]) {
+            print "Thank you, user has been created.<br />";
             return $data;
         }
+        print "<div class=\"alert alert-danger\" role=\"alert\">";
+        foreach ($data["errorMessage"] as $message) {
+            print $message . "<br />";
+        }
+        
+        
+        print "</div>";
         
     } else {
         $data["email"] = "";
@@ -242,10 +269,8 @@ function showNewUser($data = array()) {
         $data["last_name"] = "";
         
     }
-    //Show create new user in main part of dashboard.
-    print "This is where I create new users!";
     //Need email, first name, last name, password.
-    loadPermissions();
+
     print '<form class="form-signin" action ="dashboard.php?view=newUser" method ="POST" name ="new_user">
         <h2 class="form-signin-heading">Please Enter New User Information</h2>
         <label for="inputEmail" class="sr-only">Email address</label>

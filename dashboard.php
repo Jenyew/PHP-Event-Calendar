@@ -41,6 +41,15 @@ if (isset($_GET["view"])) {
 
         <!-- Custom styles for this template -->
         <link href="css/dashboard.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/jquery-ui.css">
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <script>
+            $(function() {
+              $( "#datepicker" ).datepicker();
+            });
+        </script>
 
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -81,15 +90,29 @@ if (isset($_GET["view"])) {
             <div class="row">
                 <div class="col-sm-3 col-md-2 sidebar">
                     <ul class="nav nav-sidebar">
-                        <li <?php if ($currentNav == "overview") { print 'class="active"';} ?> ><a href="dashboard.php?view=overview">Overview <span class="sr-only">(current)</span></a></li>
-                        <li <?php if ($currentNav == "addEvent") { print 'class="active"';} ?> ><a href="dashboard.php?view=addEvent">Add Event</a></li>
-                        <li <?php if ($currentNav == "allEvents") { print 'class="active"';} ?> ><a href="dashboard.php?view=allEvents">View All Events</a></li>
-                        <li <?php if ($currentNav == "allCategories") { print 'class="active"';} ?> ><a href="dashboard.php?view=allCategories">View All Categories</a></li>
+                        <li <?php if ($currentNav == "overview") {
+    print 'class="active"';
+} ?> ><a href="dashboard.php?view=overview">Overview <span class="sr-only">(current)</span></a></li>
+                        <li <?php if ($currentNav == "addEvent") {
+    print 'class="active"';
+} ?> ><a href="dashboard.php?view=addEvent">Add Event</a></li>
+                        <li <?php if ($currentNav == "allEvents") {
+    print 'class="active"';
+} ?> ><a href="dashboard.php?view=allEvents">View All Events</a></li>
+                        <li <?php if ($currentNav == "allCategories") {
+    print 'class="active"';
+} ?> ><a href="dashboard.php?view=allCategories">View All Categories</a></li>
                     </ul>
                     <ul class="nav nav-sidebar">
-                        <li <?php if ($currentNav == "account") { print 'class="active"';} ?> ><a href="dashboard.php?view=account">Account Settings</a></li>
-                        <li <?php if ($currentNav == "users") { print 'class="active"';} ?> ><a href="dashboard.php?view=users">List All Users</a></li>
-                        <li <?php if ($currentNav == "newUser") { print 'class="active"';} ?> ><a href="dashboard.php?view=newUser">Create New User</a></li>
+                        <li <?php if ($currentNav == "account") {
+    print 'class="active"';
+} ?> ><a href="dashboard.php?view=account">Account Settings</a></li>
+                        <li <?php if ($currentNav == "users") {
+    print 'class="active"';
+} ?> ><a href="dashboard.php?view=users">List All Users</a></li>
+                        <li <?php if ($currentNav == "newUser") {
+    print 'class="active"';
+} ?> ><a href="dashboard.php?view=newUser">Create New User</a></li>
                         <!--<li><a href=""></a></li>-->
                         <!--<li><a href="">More navigation</a></li>-->
                     </ul>
@@ -100,44 +123,47 @@ if (isset($_GET["view"])) {
                     <!--</ul>-->
                 </div>
                 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                    
-<?php
-if (isset($_GET["view"])) {
-    if ($_GET["view"] === "profile") {
-        print '<h1 class="page-header">Profile</h1>';
-        showProfile();
-    } else if ($_GET["view"] === "addEvent") {
-        print '<h1 class="page-header">Add New Event</h1>';
-        showAddEvent();
-    } else if ($_GET["view"] === "allEvents") {
-        print '<h1 class="page-header">All Events</h1>';
-        showAllEvents();
-    } else if ($_GET["view"] === "allCategories") {
-        print '<h1 class="page-header">All Categories</h1>';
-        showAllCategories();
-    } else if ($_GET["view"] === "account") {
-        print '<h1 class="page-header">Account Settings</h1>';
-        showAccount();
-    } else if ($_GET["view"] === "users") {
-        print '<h1 class="page-header">All Users</h1>';
-        showUsers();
-    } else if ($_GET["view"] === "newUser") {
-        if (isset($_POST["submit"])) {
-            print '<h1 class="page-header">Add New User</h1>';
-            $data = showNewUser($_POST);
-            print_r($data);
-        } else {
-            print '<h1 class="page-header">Add New User</h1>';
-            showNewUser();
-        }
-    } else {
-        print '<h1 class="page-header">Overview</h1>';
-    }
-} else {
-    print '<h1 class="page-header">Overview</h1>';
-}
 
-?>
+                    <?php
+                    if (isset($_GET["view"])) {
+                        if ($_GET["view"] === "profile") {
+                            print '<h1 class="page-header">Profile</h1>';
+                            showProfile();
+                        } else if ($_GET["view"] === "addEvent") {
+                            if (isset($_POST["submit"])) {
+                                print '<h1 class="page-header">Add New Event</h1>';
+                                $data = showAddEvent($_POST);
+                            } else {
+                                print '<h1 class="page-header">Add New Event</h1>';
+                                showAddEvent();
+                            }
+                        } else if ($_GET["view"] === "allEvents") {
+                            print '<h1 class="page-header">All Events</h1>';
+                            showAllEvents();
+                        } else if ($_GET["view"] === "allCategories") {
+                            print '<h1 class="page-header">All Categories</h1>';
+                            showAllCategories();
+                        } else if ($_GET["view"] === "account") {
+                            print '<h1 class="page-header">Account Settings</h1>';
+                            showAccount();
+                        } else if ($_GET["view"] === "users") {
+                            print '<h1 class="page-header">All Users</h1>';
+                            showUsers();
+                        } else if ($_GET["view"] === "newUser") {
+                            if (isset($_POST["submit"])) {
+                                print '<h1 class="page-header">Add New User</h1>';
+                                $data = showNewUser($_POST);
+                            } else {
+                                print '<h1 class="page-header">Add New User</h1>';
+                                showNewUser();
+                            }
+                        } else {
+                            print '<h1 class="page-header">Overview</h1>';
+                        }
+                    } else {
+                        print '<h1 class="page-header">Overview</h1>';
+                    }
+                    ?>
                     <!--
                               <div class="row placeholders">
                                 <div class="col-xs-6 col-sm-3 placeholder">
@@ -301,5 +327,10 @@ if (isset($_GET["view"])) {
         <script src="js/bootstrap.min.js"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <script src="js/ie10-viewport-bug-workaround.js"></script>
+        <script>
+                $(function() {
+            $( "#datepicker" ).datepicker();
+          });
+        </script>
     </body>
 </html>
