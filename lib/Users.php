@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -13,8 +13,7 @@
  * @param string $pass  Their password.
  * @return array  Success boolean on whether or not login was valid and errorMessage.
  */
-
-function logIn($email,$pass) {
+function logIn($email, $pass) {
     //check if username exists
     $email = trim($email);
     $pass = trim($pass);
@@ -24,7 +23,7 @@ function logIn($email,$pass) {
     if ($pass == "") {
         return array("success" => false, "errorMessage" => "Password cannot be blank.");
     }
-    
+
     $db = new DB;
     $db->queryAssoc("select * from users where email = :email ", array("email" => $email));
     //If the email exists, it will return a row and count would be 1.
@@ -32,31 +31,29 @@ function logIn($email,$pass) {
         return array("success" => false, "errorMessage" => "Email does not exist.");
     }
     $result = $db->resultsArray[0];
-    
-    if (password_verify ($pass, $result["password"])) {
+
+    if (password_verify($pass, $result["password"])) {
         //Checks if password entered matches actual password taken from database.
-        
         //check if user account is active
         if (!$result["active"]) {
             return array("success" => false, "errorMessage" => "This account has been disabled. Please contact and administrator.");
         }
-        
+
         //check if account has expired
         //if ( expire time is < current time) {
-            //update database: set account active to false.
-            //error message and return "Your account has expired. Please contact and administrator."
+        //update database: set account active to false.
+        //error message and return "Your account has expired. Please contact and administrator."
         //}
-        
         //save user info in SESSION
         $_SESSION["userLoggedIn"] = true;
         $_SESSION["uid"] = $result["id"];
         $_SESSION["email"] = $result["email"];
         $_SESSION["first_name"] = $result["firstName"];
         $_SESSION["last_name"] = $result["lastName"];
-        
-            return array("success" => true, "errorMessage" => "");
+
+        return array("success" => true, "errorMessage" => "");
     } else {
-            return array("success" => false, "errorMessage" => "Incorrect password!");
+        return array("success" => false, "errorMessage" => "Incorrect password!");
     }
 }
 
@@ -69,9 +66,9 @@ function saveUserData() {
     if ($example == "") {
         return $error; //Data cannot be blank.
     }
-    
-    
-    
+
+
+
     //Save data to database if there are no issues.
 }
 
@@ -87,7 +84,7 @@ function createUser($data) {
     }
     //check perms
     loadPermissions();
-    if (!isset ($_SESSION["permissions"]["USER"]["ADMIN"])) {
+    if (!isset($_SESSION["permissions"]["USER"]["ADMIN"])) {
         $data["error"] = true;
         $data["errorMessage"][] = "You do not have permission to create users.";
         return $data;
@@ -97,7 +94,7 @@ function createUser($data) {
         $data["errorMessage"][] = "You do not have permission to create users.";
         return $data;
     }
-    
+
     $data["error"] = false;
     $data["email"] = trim($data["email"]);
     $data["password"] = trim($data["password"]);
@@ -135,18 +132,18 @@ function createUser($data) {
     $db = new DB;
     //$params will be safely injected into the query where :index = the value of that index in the array.
     $params = array("email" => $data["email"],
-                    "password" => password_hash($data["password"], PASSWORD_BCRYPT),
-                    "firstname" => $data["first_name"],
-                    "lastname" => $data["last_name"]);
+        "password" => password_hash($data["password"], PASSWORD_BCRYPT),
+        "firstname" => $data["first_name"],
+        "lastname" => $data["last_name"]);
     $db->sqlSave("INSERT INTO users (email, password, firstName, lastName, active) VALUES ( :email , :password , :firstname , :lastname , \"1\" ) ", $params);
-    
-    if ($db->error){
+
+    if ($db->error) {
         $data["error"] = true;
         $data["errorMessage"][] = $db->errorMessage;
         return $data;
     }
-   $data["error"] = false;
-   return $data;
+    $data["error"] = false;
+    return $data;
 }
 
 function deleteUser() {
@@ -218,11 +215,11 @@ function showNewUser($data = array()) {
         //clear errors
         $data["error"] = false;
         $data["errorMessage"] = array();
-        
-        
-        
-        
-        
+
+
+
+
+
         $data["email"] = trim($data["email"]);
         $data["password"] = trim($data["password"]);
         $data["password2"] = trim($data["password2"]);
@@ -259,30 +256,28 @@ function showNewUser($data = array()) {
         foreach ($data["errorMessage"] as $message) {
             print $message . "<br />";
         }
-        
-        
+
+
         print "</div>";
-        
     } else {
         $data["email"] = "";
         $data["first_name"] = "";
         $data["last_name"] = "";
-        
     }
     //Need email, first name, last name, password.
 
     print '<form class="form-signin" action ="dashboard.php?view=newUser" method ="POST" name ="new_user">
         <h2 class="form-signin-heading">Please Enter New User Information</h2>
         <label for="inputEmail" class="sr-only">Email address</label>
-        <input name="email"  value="'.$data["email"].'" type="email" id="inputEmail" class="form-control" placeholder ="Email" required autofocus>
+        <input name="email"  value="' . $data["email"] . '" type="email" id="inputEmail" class="form-control" placeholder ="Email" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
         <label for="inputPassword2" class="sr-only">Password2</label>
         <input name="password2" type="password" id="inputPassword2" class="form-control" placeholder="Re-Enter Password" required>
         <label for="inputFirstName" class="sr-only">First Name</label>
-        <input name="first_name" value="'.$data["first_name"].'" type="text" id="inputFirstName" class="form-control" placeholder="First Name" required>
+        <input name="first_name" value="' . $data["first_name"] . '" type="text" id="inputFirstName" class="form-control" placeholder="First Name" required>
         <label for="inputLastName" class="sr-only">Last Name</label>
-        <input name="last_name" value="'.$data["last_name"].'" type="text" id="inputLastName" class="form-control" placeholder="Last Name" required>
+        <input name="last_name" value="' . $data["last_name"] . '" type="text" id="inputLastName" class="form-control" placeholder="Last Name" required>
         <div class="checkbox">
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit">Create New User</button>

@@ -16,6 +16,10 @@ if (isset($_GET["view"])) {
         $currentNav = "users";
     } else if ($_GET["view"] === "newUser") {
         $currentNav = "newUser";
+    } else if ($_GET["view"] === "category") {
+        
+    } else if ($_GET["view"] === "editEvent") {
+        
     } else {
         $currentNav = "overview";
     }
@@ -46,8 +50,8 @@ if (isset($_GET["view"])) {
         <script src="js/jquery.js"></script>
         <script src="js/jquery-ui.min.js"></script>
         <script>
-            $(function() {
-              $( "#datepicker" ).datepicker();
+            $(function () {
+                $("#datepicker").datepicker();
             });
         </script>
 
@@ -90,29 +94,43 @@ if (isset($_GET["view"])) {
             <div class="row">
                 <div class="col-sm-3 col-md-2 sidebar">
                     <ul class="nav nav-sidebar">
-                        <li <?php if ($currentNav == "overview") {
-    print 'class="active"';
-} ?> ><a href="dashboard.php?view=overview">Overview <span class="sr-only">(current)</span></a></li>
-                        <li <?php if ($currentNav == "addEvent") {
-    print 'class="active"';
-} ?> ><a href="dashboard.php?view=addEvent">Add Event</a></li>
-                        <li <?php if ($currentNav == "allEvents") {
-    print 'class="active"';
-} ?> ><a href="dashboard.php?view=allEvents">View All Events</a></li>
-                        <li <?php if ($currentNav == "allCategories") {
-    print 'class="active"';
-} ?> ><a href="dashboard.php?view=allCategories">View All Categories</a></li>
+                        <li <?php
+                        if ($currentNav == "overview") {
+                            print 'class="active"';
+                        }
+                        ?> ><a href="dashboard.php?view=overview">Overview <span class="sr-only">(current)</span></a></li>
+                        <li <?php
+                        if ($currentNav == "addEvent") {
+                            print 'class="active"';
+                        }
+                        ?> ><a href="dashboard.php?view=addEvent">Add Event</a></li>
+                        <li <?php
+                            if ($currentNav == "allEvents") {
+                                print 'class="active"';
+                            }
+                            ?> ><a href="dashboard.php?view=allEvents">View All Events</a></li>
+                        <li <?php
+                            if ($currentNav == "allCategories") {
+                                print 'class="active"';
+                            }
+                            ?> ><a href="dashboard.php?view=allCategories">View All Categories</a></li>
                     </ul>
                     <ul class="nav nav-sidebar">
-                        <li <?php if ($currentNav == "account") {
-    print 'class="active"';
-} ?> ><a href="dashboard.php?view=account">Account Settings</a></li>
-                        <li <?php if ($currentNav == "users") {
-    print 'class="active"';
-} ?> ><a href="dashboard.php?view=users">List All Users</a></li>
-                        <li <?php if ($currentNav == "newUser") {
-    print 'class="active"';
-} ?> ><a href="dashboard.php?view=newUser">Create New User</a></li>
+                        <li <?php
+                        if ($currentNav == "account") {
+                            print 'class="active"';
+                        }
+                            ?> ><a href="dashboard.php?view=account">Account Settings</a></li>
+                        <li <?php
+                        if ($currentNav == "users") {
+                            print 'class="active"';
+                        }
+                            ?> ><a href="dashboard.php?view=users">List All Users</a></li>
+                        <li <?php
+                        if ($currentNav == "newUser") {
+                            print 'class="active"';
+                        }
+                            ?> ><a href="dashboard.php?view=newUser">Create New User</a></li>
                         <!--<li><a href=""></a></li>-->
                         <!--<li><a href="">More navigation</a></li>-->
                     </ul>
@@ -328,9 +346,9 @@ if (isset($_GET["view"])) {
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <script src="js/ie10-viewport-bug-workaround.js"></script>
         <script>
-                $(function() {
-            $( "#datepicker" ).datepicker();
-          });
+            $(function () {
+                $("#datepicker").datepicker();
+            });
         </script>
     </body>
 </html>
