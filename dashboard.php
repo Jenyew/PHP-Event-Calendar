@@ -17,9 +17,9 @@ if (isset($_GET["view"])) {
     } else if ($_GET["view"] === "newUser") {
         $currentNav = "newUser";
     } else if ($_GET["view"] === "category") {
-        
+        $currentNav = "category";
     } else if ($_GET["view"] === "editEvent") {
-        
+        $currentNav = "editEvent";
     } else {
         $currentNav = "overview";
     }
@@ -182,6 +182,11 @@ if (isset($_GET["view"])) {
                                 print '<h1 class="page-header">Add New User</h1>';
                                 showNewUser();
                             }
+                        } else if ($_GET["view"] === "category") {
+                            $db = new DB;
+                            $db->queryAssoc('select title from category_types where category_id = ' . $_GET["id"], array());
+                            $result = $db->resultsArray;
+                            print '<h1 class="page-header">All events for ' . $result[0]["title"] . '</h1>';
                         } else {
                             print '<h1 class="page-header">Overview</h1>';
                         }
