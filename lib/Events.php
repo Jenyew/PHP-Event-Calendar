@@ -77,10 +77,6 @@ function showAddEvent($data = array()) {
         $data["error"] = false;
         $data["errorMessage"] = array();
 
-
-
-
-
         $data["title"] = trim($data["title"]);
         $data["description"] = trim($data["description"]);
         $data["startTime"] = trim($data["startTime"]);
@@ -140,11 +136,10 @@ function showAddEvent($data = array()) {
 
 function showAllEvents() {
     //Show all events in main part of dashboard.
-    print "These are all of the events!";
 
     //Todays Events
     print '
-          <h2 class="sub-header">Events Today</h2>
+          <h3 class="sub-header">Events Today</h3>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -158,15 +153,7 @@ function showAllEvents() {
               </thead>
               <tbody>
                 <tr>
-                  <td>Meeting</td>
-                  <td>9:30AM Wednesday, April 29, 2015</td>
-                  <td>10:30AM Wednesday, April 29, 2015</td>
-                  <td>
-                      <button type="button" class="btn btn-xs btn-default">Meetings</button>
-                      <button type="button" class="btn btn-xs btn-default">Staff</button>
-                      <button type="button" class="btn btn-xs btn-default">10th Grade</button>
-                  </td>
-                  <td><button type="button" class="btn btn-xs btn-info">Edit Event</button></td>
+                
                 </tr>
               </tbody>
             </table>
@@ -175,7 +162,7 @@ function showAllEvents() {
 
     //This week's Events
     print '
-          <h2 class="sub-header">Events This Week</h2>
+          <h3 class="sub-header">Events This Week</h3>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -189,26 +176,10 @@ function showAllEvents() {
               </thead>
               <tbody>
                 <tr>
-                  <td>Meeting</td>
-                  <td>9:30AM Wednesday, April 29, 2015</td>
-                  <td>10:30AM Wednesday, April 29, 2015</td>
-                  <td>
-                      <button type="button" class="btn btn-xs btn-default">Meetings</button>
-                      <button type="button" class="btn btn-xs btn-default">Staff</button>
-                      <button type="button" class="btn btn-xs btn-default">10th Grade</button>
-                  </td>
-                  <td><button type="button" class="btn btn-xs btn-info">Edit Event</button></td>
+                
                 </tr>
                 <tr>
-                  <td>Meeting</td>
-                  <td>9:30AM Friday, May 1, 2015</td>
-                  <td>10:30AM Friday, May 1, 2015</td>
-                  <td>
-                      <button type="button" class="btn btn-xs btn-default">Meetings</button>
-                      <button type="button" class="btn btn-xs btn-default">Staff</button>
-                      <button type="button" class="btn btn-xs btn-default">10th Grade</button>
-                  </td>
-                  <td><button type="button" class="btn btn-xs btn-info">Edit Event</button></td>
+                
                 </tr>
               </tbody>
             </table>
@@ -217,7 +188,7 @@ function showAllEvents() {
 
     //All events today or after
     print '
-          <h2 class="sub-header">All New Events</h2>
+          <h3 class="sub-header">All New Events</h3>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -231,7 +202,7 @@ function showAllEvents() {
                 </tr>
               </thead>
               <tbody>
-                <tr> <pre>';
+                <tr>';
 
     $db = new DB;
     $db->queryAssoc("select * from events", array());
@@ -249,11 +220,13 @@ function showAllEvents() {
     }
     unset($row);
     foreach ($result as &$row) {
-        foreach ($row["categories"] as $catid => $f) {
-            $db->queryAssoc("select title from category_types where category_id = :categoryID ", array("categoryID" => $catid));
-            if ($db->count > 0) {
-                $title = $db->resultsArray[0]["title"];
-                $row["categories"][$catid] = $title;
+        if (isset($row["categories"])) {
+            foreach ($row["categories"] as $catid => $f) {
+                $db->queryAssoc("select title from category_types where category_id = :categoryID ", array("categoryID" => $catid));
+                if ($db->count > 0) {
+                    $title = $db->resultsArray[0]["title"];
+                    $row["categories"][$catid] = $title;
+                }
             }
         }
     }
@@ -269,8 +242,10 @@ function showAllEvents() {
         print "<td>" . $row["end"] . "</td>";
 
         print "<td>";
-        foreach ($row["categories"] as $catid => $title) {
-            print '<a href = "dashboard.php?view=category&id=' . $catid . '" class="btn btn-xs btn-default">' . $title . '</a>';
+        if (isset($row["categories"])) {
+            foreach ($row["categories"] as $catid => $title) {
+                print '<a href = "dashboard.php?view=category&id=' . $catid . '" class="btn btn-xs btn-default">' . $title . '</a>';
+            }
         }
         print "</td>";
 //            print "<td>

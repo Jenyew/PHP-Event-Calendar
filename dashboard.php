@@ -159,7 +159,7 @@ if (isset($_GET["view"])) {
                             print '<h1 class="page-header">All Events</h1>';
                             showAllEvents();
                         } else if ($_GET["view"] === "allCategories") {
-                            print '<h1 class="page-header">All Categories</h1>';
+                            print '<h1 class="page-header">Categories</h1>';
                             showAllCategories();
                         } else if ($_GET["view"] === "account") {
                             print '<h1 class="page-header">Account Settings</h1>';
