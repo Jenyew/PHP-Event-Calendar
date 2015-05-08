@@ -12,6 +12,7 @@ function showAllCategories($data = array()) {
         //clear errors
         $data["error"] = false;
         $data["errorMessage"] = array();
+        
 
         $data["title"] = trim($data["title"]);
         $data["description"] = trim($data["description"]);
@@ -19,6 +20,21 @@ function showAllCategories($data = array()) {
             $data["error"] = true;
             $data["errorMessage"][] = "Title cannot be empty.";
         }
+        
+        if (!$data["error"]) {
+            $data = createCategory($data);
+            
+        }
+        if (!$data["error"]) {
+            print "Thank you, category has been created.<br />";
+            print '<br /><br /><td><a href = "dashboard.php?view=allCategories" class="btn btn-sm btn-info">Back</a></td>';
+            return $data;
+        }
+        print "<div class=\"alert alert-danger\" role=\"alert\">";
+        foreach ($data["errorMessage"] as $message) {
+            print $message . "<br />";
+        }
+        print "</div>";
     } else {
         $data["title"] = "";
         $data["description"] = "";
@@ -27,10 +43,10 @@ function showAllCategories($data = array()) {
     print '<form class="form-createCategory" action ="dashboard.php?view=allCategories" method ="POST" name ="add_category">
         <h3 class="form-createCategory-heading">Create New Category</h3>
         <label for="inputTitle" class="sr-only">Category Title</label>
-        <input name="title"  value="' . $data["title"] . '" type="title" id="inputTitle" class="form-control" placeholder ="Category Title" required autofocus>
+        <input name="title"  value="' . $data["title"] . '" type="text" id="inputTitle" class="form-control" placeholder ="Category Title" required autofocus>
         <label for="inputDescription" class="sr-only">Description</label>
-        <textarea rows="2" name="description" class="responsive-input" placeholder="Category Description">' . $data["description"] . '</textarea>
-        <td><a href = "dashboard.php?view=allCategories" class="btn btn-lg btn-primary" type="submit" name="submit">Create Category</a></td>
+        <textarea rows="2" name="description" class="responsive-input" placeholder="Category Description" required>' . $data["description"] . '</textarea>
+        <button class="btn btn-lg btn-primary" type="submit" name="submit">Create Category</button>
       </form>';
 //    return $data;
     print '
@@ -73,44 +89,66 @@ function showAllCategories($data = array()) {
 //            }
 //        }
 //    }
-    unset($row);
+//    unset($row);
     //print_r($result);
-
 
     foreach ($result as $row) {
         print "<tr>";
         print "<td>" . $row["title"] . "</td>";
         print "<td>" . $row["description"] . "</td>";
-
-//        print "<td>";
-//        if (isset($row["categories"])) {
-//            foreach ($row["categories"] as $catid => $title) {
-//                print '<a href = "dashboard.php?view=category&id=' . $catid . '" class="btn btn-xs btn-default">' . $title . '</a>';
-//            }
-//        }
-//        print "</td>";
-//            print "<td>
-//                        <button type='button' class='btn btn-xs btn-default'>Meetings</button>
-//                        <button type='button' class='btn btn-xs btn-default'>Staff</button>
-//                        <button type='button' class='btn btn-xs btn-default'>10th Grade</button>
-//                    </td>";
-//        print '<td><a href = "dashboard.php?view=editEvent&eventid=' . $row["id"] . '" class="btn btn-xs btn-info">Edit Event</a></td>';
-//        print "</tr>";
+        print "</tr>";
     }
-
-//    print '
-//                  <td>9:30AM Wednesday, April 29, 2015</td>
-//                  <td>10:30AM Wednesday, April 29, 2015</td>
-//                  <td>
-//                      <button type="button" class="btn btn-xs btn-default">Meetings</button>
-//                      <button type="button" class="btn btn-xs btn-default">Staff</button>
-//                      <button type="button" class="btn btn-xs btn-default">10th Grade</button>
-//                  </td>
-//                  <td><button type="button" class="btn btn-xs btn-info">Edit Event</button></td>
-//                </tr>';
-
     print '
               </tbody>
             </table>
           </div>';
+
+}
+function createCategory($data) {
+    if ($data == array()) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Create Category array cannot have no arguments.";
+        return;
+    }
+    //check perms
+    loadPermissions();
+    if (!isset($_SESSION["permissions"]["USER"]["ADMIN"])) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "You do not have permission to create users.";
+        return $data;
+    }
+    if ($_SESSION["permissions"]["USER"]["ADMIN"] !== true) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "You do not have permission to create users.";
+        return $data;
+    }
+    $data["error"] = false;
+    $data["title"] = trim($data["title"]);
+    $data["description"] = trim($data["description"]);
+    if ($data["title"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Title cannot be empty.";
+    }
+    if ($data["description"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Description cannot be empty.";
+    }
+
+    if ($data["error"]) {
+        return $data;
+    }
+    
+    $db = new DB;
+    //$params will be safely injected into the query where :index = the value of that index in the array.
+    $params = array("title" => $data["title"],
+        "description" => $data["description"]);
+    $db->sqlSave("INSERT INTO category_types (title, description) VALUES ( :title , :description ) ", $params);
+
+    if ($db->error) {
+        $data["error"] = true;
+        $data["errorMessage"][] = $db->errorMessage;
+        return $data;
+    }
+    $data["error"] = false;
+    return $data;
 }

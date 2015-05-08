@@ -122,10 +122,6 @@ function createUser($data) {
         $data["errorMessage"][] = "Passwords do not match.";
     }
 
-
-
-
-
     if ($data["error"]) {
         return $data;
     }
