@@ -122,6 +122,13 @@ function showAddEvent($data = array()) {
         <input name="title"  value="' . $data["title"] . '" type="title" id="inputTitle" class="form-control" placeholder ="Event Title" required autofocus>
         <label for="inputDescription" class="sr-only">Description</label>
         <textarea rows="4" name="description" class="responsive-input" placeholder="Event Description">' . $data["description"] . '</textarea>
+        <br /><br />
+        <input type="text" id="field1" size="50"
+            value="Sunday, July 30th in the Year 1967 CE" /><br/>
+        <br /><br />
+
+
+
         <label for="inputStartTime" class="sr-only">Start Time</label>
         <input name="startTime" value="' . $data["startTime"] . '" type="text" id="datepicker" class="form-control" placeholder="Event Start Time" required>
             <input type="text" id="datepicker">

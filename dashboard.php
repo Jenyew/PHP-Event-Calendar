@@ -49,11 +49,17 @@ if (isset($_GET["view"])) {
         <link rel="stylesheet" href="css/jquery-ui.css">
         <script src="js/jquery.js"></script>
         <script src="js/jquery-ui.min.js"></script>
-        <script>
+        <link rel="stylesheet" href="css/anytime.css" />
+        <script src="js/anytime.js"></script>
+        
+        
+        
+        
+<!--        <script>
             $(function () {
                 $("#datepicker").datepicker();
             });
-        </script>
+        </script>-->
 
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -358,9 +364,14 @@ if (isset($_GET["view"])) {
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <script src="js/ie10-viewport-bug-workaround.js"></script>
         <script>
+        AnyTime.picker( "field1",
+          { format: "%W, %M %D, %z - %h:%i %p", firstDOW: 1 } );
+       
+        </script>
+<!--        <script>
             $(function () {
                 $("#datepicker").datepicker();
             });
-        </script>
+        </script>-->
     </body>
 </html>
