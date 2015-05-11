@@ -92,7 +92,6 @@ and open the template in the editor.
                     return;
                 } else {
                     print "<div class=\"alert alert-danger\" role=\"alert\">";
-                    print "I am not logged in. D= <br />";
                     print $loggedIn["errorMessage"];
                     print "</div>";
                 }
