@@ -240,7 +240,7 @@ function showAccount($data = array()) {
     //Need email, first name, last name, password.
 
     print '<form class="form-accountchange" action ="dashboard.php?view=account" method ="POST" name ="new_user">
-        <h2 class="form-signin-heading">Use this form to edit your account info.</h2>
+        <h3 class="form-signin-heading">Use this form to edit your account info.</h3>
         <label for="inputEmail" class="sr-only">Email address</label>
         <input name="email"  value="' . $data["email"] . '" type="email" id="inputEmail" class="form-control" placeholder ="Email" required autofocus>
         <label for="inputFirstName" class="sr-only">First Name</label>
@@ -249,33 +249,32 @@ function showAccount($data = array()) {
         <input name="last_name" value="' . $data["last_name"] . '" type="text" id="inputLastName" class="form-control" placeholder="Last Name" required>
         <div class="checkbox">
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" value="info" name="submit">Update Account</button>
+        <button class="btn btn-lg btn-primary" type="submit" value="info" name="submit">Update Account</button>
       </form>';
 
 
     //change pass form
     print '<form class="form-passchange" action ="dashboard.php?view=account" method ="POST" name ="new_user">
-        <h2 class="form-signin-heading">Use this form to change your password.</h2>
-        <label for="inputPass" class="sr-only">Email address</label>
-        <input name="pass"  value="" type="password" id="inputPass" class="form-control" placeholder ="Current Password" required >
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input name="password" type="password" id="inputPassword" class="form-control" placeholder="New Password" required>
-        <label for="inputPassword2" class="sr-only">Password2</label>
-        <input name="password2" type="password" id="inputPassword2" class="form-control" placeholder="Re-Enter New Password" required>
+        <h3 class="form-signin-heading">Use this form to change your password.</h3>
+        <label for="inputPassword" class="sr-only">OldPass</label>
+        <input name="password"  value="" type="password" id="inputPassword" class="form-control" placeholder ="Current Password" required >
+        <label for="inputPasswordNew" class="sr-only">Password</label>
+        <input name="passwordNew" type="password" id="inputPasswordNew" class="form-control" placeholder="New Password" required>
+        <label for="inputPasswordNew2" class="sr-only">Password2</label>
+        <input name="passwordNew2" type="password" id="inputPasswordNew2" class="form-control" placeholder="Re-Enter New Password" required>
         
         <div class="checkbox">
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" value="pass" name="submit">Change Password</button>
+        <button class="btn btn-lg btn-primary" type="submit" value="pass" name="submit">Change Password</button>
       </form>';
     return $data;
 }
 
 function showUsers() {
     //Show all users in main part of dashboard.
-    print "These are all the users!";
     print '
 
-          <h2 class="sub-header">All Users</h2>
+          <h3 class="sub-header">All Users</h3>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -442,14 +441,29 @@ function changePass($data) {
     
     
     
-    //check if current pass matches
+    //check if current password matches
     $db = new DB;
     $db->queryAssoc("select password from users where id = :id ", array("id" => $_SESSION["uid"]));
     $result = $db->resultsArray[0];
 
-    if (!password_verify($data["password"], $result["password"])) {
+    if (password_verify($data["password"], $result["password"])) {
+        $data["error"] = false;
+    } else {
         $data["error"] = true;
         $data["errorMessage"][] = "Current password incorrect.";
+        $data["email"] = $_SESSION["email"];
+        $data["first_name"] = $_SESSION["first_name"];
+        $data["last_name"] = $_SESSION["first_name"];
+        return $data;
+    }
+    //check if new password is the same as the old password
+    if (password_verify($data["passwordNew"], $result["password"])) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "New password cannot be same as previous password.";
+        $data["email"] = $_SESSION["email"];
+        $data["first_name"] = $_SESSION["first_name"];
+        $data["last_name"] = $_SESSION["first_name"];
+        return $data;
     }
     //update pass
     $db = new DB;
