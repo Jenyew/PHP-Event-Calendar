@@ -1,5 +1,12 @@
 <?php
 include ("lib/Init.php");
+if (!isset($_SESSION["uid"])){
+    session_destroy();
+    session_start();
+    header('Location: login.php');
+    print 'You need to <a href="login.php">Log In</a>.';
+    exit;
+}
 //Check the page we're looking at.
 if (isset($_GET["view"])) {
     if ($_GET["view"] === "profile") {
@@ -87,7 +94,7 @@ if (isset($_GET["view"])) {
                         <li><a href="dashboard.php">Dashboard</a></li>
                         <!--<li><a href="#">Settings</a></li>-->
                         <li><a href="dashboard.php?view=profile">Profile</a></li>
-                        <li><a href="#">Log Out</a></li>
+                        <li><a href="login.php?status=logout">Log Out</a></li>
                     </ul>
                     <form class="navbar-form navbar-right">
                         <input type="text" class="form-control" placeholder="Search...">
@@ -175,8 +182,13 @@ if (isset($_GET["view"])) {
                             }
                         
                         } else if ($_GET["view"] === "account") {
-                            print '<h1 class="page-header">Account Settings</h1>';
-                            showAccount();
+                            if (isset($_POST["submit"])) {
+                                print '<h1 class="page-header">Account Settings</h1>';
+                                $data = showAccount($_POST);
+                            } else {
+                                print '<h1 class="page-header">Account Settings</h1>';
+                                showAccount();
+                            }
                         } else if ($_GET["view"] === "users") {
                             print '<h1 class="page-header">All Users</h1>';
                             showUsers();
@@ -189,10 +201,7 @@ if (isset($_GET["view"])) {
                                 showNewUser();
                             }
                         } else if ($_GET["view"] === "category") {
-                            $db = new DB;
-                            $db->queryAssoc('select title from category_types where category_id = ' . $_GET["id"], array());
-                            $result = $db->resultsArray;
-                            print '<h1 class="page-header">All events for ' . $result[0]["title"] . '</h1>';
+                            showCategory($_GET["id"]);
                         } else {
                             print '<h1 class="page-header">Overview</h1>';
                         }

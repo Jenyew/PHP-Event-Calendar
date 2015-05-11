@@ -61,15 +61,54 @@ function logOut() {
     session_destroy();
 }
 
-function saveUserData() {
+function saveUserData($data) {
     //Validate input
-    if ($example == "") {
-        return $error; //Data cannot be blank.
+    $data["email"] = trim($data["email"]);
+    $data["first_name"] = trim($data["first_name"]);
+    $data["last_name"] = trim($data["last_name"]);
+
+    if ($data["email"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Email cannot be empty.";
+    }
+    if ($data["first_name"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Please enter first name.";
+    }
+    if ($data["last_name"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Please enter last name.";
+    }
+    if ($data["error"]) {
+        return $data;
     }
 
 
-
     //Save data to database if there are no issues.
+    //update DB
+    $db = new DB;
+    //$params will be safely injected into the query where :index = the value of that index in the array.
+    $params = array("id" => $_SESSION["uid"],
+        "email" => $data["email"],
+        "firstName" => $data["first_name"],
+        "lastName" => $data["last_name"]);
+    $db->sqlSave("UPDATE users SET email = :email, firstName = :firstName, lastName = :lastName WHERE id = :id ", $params);
+
+    if ($db->error) {
+        $data["error"] = true;
+        $data["errorMessage"][] = $db->errorMessage;
+        return $data;
+    }
+    
+    //reload sessions info
+    $_SESSION["email"] = $data["email"];
+    $_SESSION["first_name"] = $data["first_name"];
+    $_SESSION["last_name"] = $data["last_name"];
+    
+    
+    
+    $data["error"] = false;
+    return $data;
 }
 
 function loadUserData() {
@@ -155,9 +194,80 @@ function showProfile() {
     print "This is my profile!";
 }
 
-function showAccount() {
+function showAccount($data = array()) {
     //Show account info in main part of dashboard.
-    print "This is my account info!";
+    if ($data != array()) {
+        //clear errors
+        $data["error"] = false;
+        $data["errorMessage"] = array();
+
+        //info form logic
+        if ($data["submit"] == "info") {
+            $data = saveUserData($data);
+            if (!$data["error"]) {
+                print "Thank you, account information has been updated.<br />";
+                return $data;
+            }
+            print "<div class=\"alert alert-danger\" role=\"alert\">";
+            foreach ($data["errorMessage"] as $message) {
+                print $message . "<br />";
+            }
+            print "</div>";
+        }
+
+
+
+
+        //pass form logic
+        if ($data["submit"] == "pass") {
+            $data = changePass($data);
+            if (!$data["error"]) {
+                print "Thank you, password has been updated.<br />";
+                return $data;
+            }
+            print "<div class=\"alert alert-danger\" role=\"alert\">";
+            foreach ($data["errorMessage"] as $message) {
+                print $message . "<br />";
+            }
+            print "</div>";
+        }
+
+    } else {
+        $data["email"] = $_SESSION["email"];
+        $data["first_name"] = $_SESSION["first_name"];
+        $data["last_name"] = $_SESSION["last_name"];
+    }
+    //Need email, first name, last name, password.
+
+    print '<form class="form-accountchange" action ="dashboard.php?view=account" method ="POST" name ="new_user">
+        <h2 class="form-signin-heading">Use this form to edit your account info.</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input name="email"  value="' . $data["email"] . '" type="email" id="inputEmail" class="form-control" placeholder ="Email" required autofocus>
+        <label for="inputFirstName" class="sr-only">First Name</label>
+        <input name="first_name" value="' . $data["first_name"] . '" type="text" id="inputFirstName" class="form-control" placeholder="First Name" required>
+        <label for="inputLastName" class="sr-only">Last Name</label>
+        <input name="last_name" value="' . $data["last_name"] . '" type="text" id="inputLastName" class="form-control" placeholder="Last Name" required>
+        <div class="checkbox">
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="info" name="submit">Update Account</button>
+      </form>';
+
+
+    //change pass form
+    print '<form class="form-passchange" action ="dashboard.php?view=account" method ="POST" name ="new_user">
+        <h2 class="form-signin-heading">Use this form to change your password.</h2>
+        <label for="inputPass" class="sr-only">Email address</label>
+        <input name="pass"  value="" type="password" id="inputPass" class="form-control" placeholder ="Current Password" required >
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input name="password" type="password" id="inputPassword" class="form-control" placeholder="New Password" required>
+        <label for="inputPassword2" class="sr-only">Password2</label>
+        <input name="password2" type="password" id="inputPassword2" class="form-control" placeholder="Re-Enter New Password" required>
+        
+        <div class="checkbox">
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="pass" name="submit">Change Password</button>
+      </form>';
+    return $data;
 }
 
 function showUsers() {
@@ -206,7 +316,33 @@ function showUsers() {
 }
 
 function showNewUser($data = array()) {
-    $_SESSION["uid"] = "1";
+    loadPermissions();
+    if (!isset($_SESSION["permissions"]["USER"]["ADMIN"])) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "You do not have permission to create users.";
+        print "<div class=\"alert alert-danger\" role=\"alert\">";
+        foreach ($data["errorMessage"] as $message) {
+            print $message . "<br />";
+        }
+
+
+        print "</div>";
+        return $data;
+    }
+    if ($_SESSION["permissions"]["USER"]["ADMIN"] !== true) {
+        $data["error"] = true;
+        print "<div class=\"alert alert-danger\" role=\"alert\">";
+        foreach ($data["errorMessage"] as $message) {
+            print $message . "<br />";
+        }
+
+
+        print "</div>";
+        $data["errorMessage"][] = "You do not have permission to create users.";
+        return $data;
+    }
+
+
     if ($data != array()) {
         //clear errors
         $data["error"] = false;
@@ -278,5 +414,55 @@ function showNewUser($data = array()) {
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit">Create New User</button>
       </form>';
+    return $data;
+}
+
+function changePass($data) {
+    //validate $data
+    $data["password"] = trim($data["password"]);
+    $data["passwordNew"] = trim($data["passwordNew"]);
+    $data["passwordNew2"] = trim($data["passwordNew2"]);
+
+    if ($data["password"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Password cannot be empty.";
+    }
+    if ($data["passwordNew"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "New password cannot be empty.";
+    }
+    if ($data["passwordNew2"] == "") {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Please confirm your new password.";
+    }
+    if ($data["passwordNew"] !== $data["passwordNew2"]) {
+            $data["error"] = true;
+            $data["errorMessage"][] = "New passwords do not match.";
+    }
+    
+    
+    
+    //check if current pass matches
+    $db = new DB;
+    $db->queryAssoc("select password from users where id = :id ", array("id" => $_SESSION["uid"]));
+    $result = $db->resultsArray[0];
+
+    if (!password_verify($data["password"], $result["password"])) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Current password incorrect.";
+    }
+    //update pass
+    $db = new DB;
+    //$params will be safely injected into the query where :index = the value of that index in the array.
+    $params = array("id" => $_SESSION["uid"],
+        "password" => password_hash($data["passwordNew"], PASSWORD_BCRYPT));
+    $db->sqlSave("UPDATE users SET password = :password WHERE id = :id ", $params);
+
+    if ($db->error) {
+        $data["error"] = true;
+        $data["errorMessage"][] = $db->errorMessage;
+        return $data;
+    }
+    $data["error"] = false;
     return $data;
 }

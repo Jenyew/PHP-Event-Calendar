@@ -85,13 +85,28 @@ and open the template in the editor.
             if (isset($_POST['submit'])) {
                 $loggedIn = logIn($_POST["email"], $_POST["password"]);
                 if ($loggedIn["success"]) {
+                    header('Location: dashboard.php');
                     print "<div class=\"alert alert-info\" role=\"alert\">";
-                    print "I am logged in!<br />";
+                    print "You are logged in!  <a href=\"dashboard.php\" class=\"btn  btn-primary\">Proceed to dashboard</a>";
                     print "</div>";
+                    return;
                 } else {
                     print "<div class=\"alert alert-danger\" role=\"alert\">";
                     print "I am not logged in. D= <br />";
                     print $loggedIn["errorMessage"];
+                    print "</div>";
+                }
+            }
+            if (isset($_GET['status'])) {
+                if ($_GET["status"] == "logout") {
+                    session_destroy();
+                    session_start();
+                    print "<div class=\"alert alert-info\" role=\"alert\">";
+                    print "You have been logged out!";
+                    print "</div>";
+                } else if ($_GET["status"] == "expire") {
+                    print "<div class=\"alert alert-info\" role=\"alert\">";
+                    print "Your login has expired! Please log in again.";
                     print "</div>";
                 }
             }
