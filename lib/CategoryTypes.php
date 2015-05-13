@@ -12,7 +12,6 @@ function showAllCategories($data = array()) {
         //clear errors
         $data["error"] = false;
         $data["errorMessage"] = array();
-        
 
         $data["title"] = trim($data["title"]);
         $data["description"] = trim($data["description"]);
@@ -20,7 +19,6 @@ function showAllCategories($data = array()) {
             $data["error"] = true;
             $data["errorMessage"][] = "Title cannot be empty.";
         }
-        
         if (!$data["error"]) {
             $data = createCategory($data);
             
@@ -60,8 +58,7 @@ function showAllCategories($data = array()) {
                   <th> </th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>';
+              <tbody>';
 
     $db = new DB;
     $db->queryAssoc("select * from category_types", array());
@@ -70,36 +67,14 @@ function showAllCategories($data = array()) {
         return "</tbody></table></div>";
     }
     $result = $db->resultsArray;
-//    foreach ($result as &$row) {
-//        $db->queryAssoc("select category_id from category_assigned where event_id = :eventID ", array("eventID" => $row["id"]));
-//        $categories = $db->resultsArray;
-//        foreach ($categories as $f => $category) {
-//            $row["categories"][$category["category_id"]] = "";
-//        }
-//    }
-//    unset($row);
-//    foreach ($result as &$row) {
-//        if (isset($row["categories"])) {
-//            foreach ($row["categories"] as $catid => $f) {
-//                $db->queryAssoc("select title from category_types where category_id = :categoryID ", array("categoryID" => $catid));
-//                if ($db->count > 0) {
-//                    $title = $db->resultsArray[0]["title"];
-//                    $row["categories"][$catid] = $title;
-//                }
-//            }
-//        }
-//    }
-//    unset($row);
-    //print_r($result);
-
     foreach ($result as $row) {
         print "<tr>";
-        print '<td><a href = "dashboard.php?view=category&id=' . $row["category_id"] . '" class="btn btn-xs btn-default">' . $row["title"] . '</a><td>';
-        print "<td>" . $row["description"] . "</td>";
+        print '<td><a href = "dashboard.php?view=category&id=' . $row["category_id"] . '" class="btn btn-xs btn-default">' . $row["title"] . '</a></td>';
+        print "<td style=\"text-align: left;\">" . $row["description"] . "</td>";
         
         //print delete button which calls deleteCategory method
 //        print '<td><button class="btn btn-xs btn-danger" type="" name="submit">Delete Category</button></td>';
-        print '<td><a href = "dashboard.php?view=deleteCategory&id=' . $row["category_id"] . '" class="btn btn-xs btn-danger">Delete Category</a><td>';
+        print '<td><a href = "dashboard.php?view=deleteCategory&id=' . $row["category_id"] . '" class="btn btn-xs btn-danger">Delete Category</a></td>';
         print "</tr>";
     }
     print '
@@ -172,7 +147,6 @@ function deleteCategory($typeID) {
     }
     $data["error"] = false;
     
-    
     //checks if category to be deleted exists
     $db = new DB;
     $db->queryAssoc('SELECT title FROM category_types WHERE category_id = :typeid ', array("typeid" => $typeID));
@@ -180,7 +154,6 @@ function deleteCategory($typeID) {
         print '<h1 class="page-header"> ERROR:</h1> <p>It appears you are trying to delete a category that does not exist.';
         return;
     }
-    
     
     //deletes category if it exists
     $db->sqlsave('DELETE FROM category_types WHERE category_id = :id ', array("id" => $typeID));
@@ -235,9 +208,6 @@ function showCategory($id) {
         return;
     }
     $result = $db->resultsArray;
-//    print "<pre>";
-//    print_r($result);
-//    print "<br>";
     
     foreach ($result as $row){
         $db = new DB;
@@ -247,17 +217,8 @@ function showCategory($id) {
             $events[$row["event_id"]][$key] = $value;
         }
     }
-//    print_r($events);
-//    print "</pre>";
-    
-    
-    
-    
-    //return;
-    
     
     //print a table with the events in the same way as View all Events
-    
     print '
           <div class="table-responsive">
             <table class="table table-striped">
@@ -273,14 +234,6 @@ function showCategory($id) {
               </thead>
               <tbody>
                 <tr>';
-
-//    $db = new DB;
-//    $db->queryAssoc("select * from events", array());
-//    if ($db->count < 1) {
-//        print "<tr><td>No current events.</td></tr>";
-//        return "</tbody></table></div>";
-//    }
-//    $result = $db->resultsArray;
     foreach ($events as &$row) {
         $db->queryAssoc("select category_id from category_assigned where event_id = :eventID ", array("eventID" => $row["id"]));
         $categories = $db->resultsArray;
@@ -301,16 +254,12 @@ function showCategory($id) {
         }
     }
     unset($row);
-    //print_r($result);
-
-
     foreach ($events as $row) {
         print "<tr>";
         print "<td>" . $row["title"] . "</td>";
         print "<td>" . $row["description"] . "</td>";
         print "<td>" . $row["start"] . "</td>";
         print "<td>" . $row["end"] . "</td>";
-
         print "<td>";
         if (isset($row["categories"])) {
             foreach ($row["categories"] as $catid => $title) {
@@ -318,37 +267,11 @@ function showCategory($id) {
             }
         }
         print "</td>";
-//            print "<td>
-//                        <button type='button' class='btn btn-xs btn-default'>Meetings</button>
-//                        <button type='button' class='btn btn-xs btn-default'>Staff</button>
-//                        <button type='button' class='btn btn-xs btn-default'>10th Grade</button>
-//                    </td>";
         print '<td><a href = "dashboard.php?view=editEvent&eventid=' . $row["id"] . '" class="btn btn-xs btn-info">Edit Event</a></td>';
         print "</tr>";
     }
-
-//    print '
-//                  <td>9:30AM Wednesday, April 29, 2015</td>
-//                  <td>10:30AM Wednesday, April 29, 2015</td>
-//                  <td>
-//                      <button type="button" class="btn btn-xs btn-default">Meetings</button>
-//                      <button type="button" class="btn btn-xs btn-default">Staff</button>
-//                      <button type="button" class="btn btn-xs btn-default">10th Grade</button>
-//                  </td>
-//                  <td><button type="button" class="btn btn-xs btn-info">Edit Event</button></td>
-//                </tr>';
-
     print '
               </tbody>
             </table>
           </div>';
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }

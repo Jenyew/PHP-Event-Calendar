@@ -94,13 +94,11 @@ if (isset($_GET["view"])) {
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="dashboard.php">Dashboard</a></li>
-                        <!--<li><a href="#">Settings</a></li>-->
-                        <li><a href="dashboard.php?view=profile">Profile</a></li>
                         <li><a href="login.php?status=logout">Log Out</a></li>
                     </ul>
-                    <form class="navbar-form navbar-right">
+<!--                    <form class="navbar-form navbar-right">
                         <input type="text" class="form-control" placeholder="Search...">
-                    </form>
+                    </form>-->
                 </div>
             </div>
         </nav>

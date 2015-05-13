@@ -238,9 +238,6 @@ function showAllEvents() {
         }
     }
     unset($row);
-    //print_r($result);
-
-
     foreach ($result as $row) {
         print "<tr>";
         print "<td>" . $row["title"] . "</td>";
@@ -255,26 +252,9 @@ function showAllEvents() {
             }
         }
         print "</td>";
-//            print "<td>
-//                        <button type='button' class='btn btn-xs btn-default'>Meetings</button>
-//                        <button type='button' class='btn btn-xs btn-default'>Staff</button>
-//                        <button type='button' class='btn btn-xs btn-default'>10th Grade</button>
-//                    </td>";
         print '<td><a href = "dashboard.php?view=editEvent&eventid=' . $row["id"] . '" class="btn btn-xs btn-info">Edit Event</a></td>';
         print "</tr>";
     }
-
-//    print '
-//                  <td>9:30AM Wednesday, April 29, 2015</td>
-//                  <td>10:30AM Wednesday, April 29, 2015</td>
-//                  <td>
-//                      <button type="button" class="btn btn-xs btn-default">Meetings</button>
-//                      <button type="button" class="btn btn-xs btn-default">Staff</button>
-//                      <button type="button" class="btn btn-xs btn-default">10th Grade</button>
-//                  </td>
-//                  <td><button type="button" class="btn btn-xs btn-info">Edit Event</button></td>
-//                </tr>';
-
     print '
               </tbody>
             </table>

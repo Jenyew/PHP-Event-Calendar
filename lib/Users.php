@@ -181,17 +181,48 @@ function createUser($data) {
     return $data;
 }
 
-function deleteUser() {
-    //Delete row in database.
+function deleteUser($uID) {
+    //Delete user row in database.
+    loadPermissions();
+    if (!isset($_SESSION["permissions"]["USER"]["ADMIN"])) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "You do not have permission to delete categories.";
+        return $data;
+    }
+    if ($_SESSION["permissions"]["USER"]["ADMIN"] !== true) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "You do not have permission to delete categories.";
+        return $data;
+    }
+    $data["error"] = false;
+    
+    //checks if category to be deleted exists
+    $db = new DB;
+    $db->queryAssoc('SELECT title FROM category_types WHERE category_id = :typeid ', array("typeid" => $typeID));
+    if ($db->count < 1) {
+        print '<h1 class="page-header"> ERROR:</h1> <p>It appears you are trying to delete a category that does not exist.';
+        return;
+    }
+    
+    //deletes category if it exists
+    $db->sqlsave('DELETE FROM category_types WHERE category_id = :id ', array("id" => $typeID));
+    if ($db->error) {
+        $data["error"] = true;
+        $data["errorMessage"][] = $db->errorMessage;
+        return $data;
+    }
+    $db->sqlsave('DELETE FROM category_assigned WHERE category_id = :id ', array("id" => $typeID));
+    if ($db->error) {
+        $data["error"] = true;
+        $data["errorMessage"][] = $db->errorMessage;
+        return $data;
+    }
+    $data["notice"] = "<div class=\"alert alert-info\" role=\"alert\">Category has been deleted!</div>";
+    return $data;
 }
 
 function loadAllUsers() {
     //Load data for all users from database.
-}
-
-function showProfile() {
-    //Show profile in main part of dashboard.
-    print "This is my profile!";
 }
 
 function showAccount($data = array()) {
@@ -269,10 +300,9 @@ function showAccount($data = array()) {
     return $data;
 }
 
-function showUsers() {
+function showUsers($data = array()) {
     //Show all users in main part of dashboard.
     print '
-
           <h3 class="sub-header">All Users</h3>
           <div class="table-responsive">
             <table class="table table-striped">
@@ -285,29 +315,30 @@ function showUsers() {
                   <th> </th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>foo@test.com</td>
-                  <td>John</td>
-                  <td>Smith</td>
-                  <td><span class="label label-success">Active</span></td>
-                  <td><button type="button" class="btn btn-xs btn-info">Edit User</button></td>
-                </tr>
-                <tr>
-                  <td>bar@test.com</td>
-                  <td>Jane</td>
-                  <td>Anderson</td>
-                  <td><span class="label label-success">Active</span></td>
-                  <td><button type="button" class="btn btn-xs btn-info">Edit User</button></td>
-                </tr>
-                <tr>
-                  <td>test@test.com</td>
-                  <td>Gary</td>
-                  <td>White</td>
-                  <td><span class="label label-danger">Disabled</span></td>
-                  <td><button type="button" class="btn btn-xs btn-info">Edit User</button></td>
-                </tr>
-                
+              <tbody>';
+    $db = new DB;
+    $db->queryAssoc("SELECT * FROM users", array());
+    if ($db->count < 1) {
+        print "<tr><td>No users found.</td></tr>";
+        return "</tbody></table></div>";
+    }
+    $result = $db->resultsArray;
+    foreach ($result as $row) {
+        print "<tr>";
+        print "<td>" . $row["email"] . "</td>";
+        print "<td>" . $row["firstName"] . "</td>";
+        print "<td>" . $row["lastName"] . "</td>";
+        if ($row["active"] == 1) {
+            print '<td><span class="label label-success">Active</span></td>';
+        } else {
+            print '<td><span class="label label-warning">Inactive</span></td>';
+        }
+        print '<td><a href = "dashboard.php?view=editUser&id=' . $row["id"] . '" class="btn btn-xs btn-info">Edit User</a></td>';
+        print '<td><a href = "dashboard.php?view=deleteUser&id=' . $row["id"] . '" class="btn btn-xs btn-danger">Delete User</a></td>';
+        //Have the page load an "Are you sure?" Confirm and delete function instead of instantly deleting user.
+        print "</tr>";
+    }
+        print '
               </tbody>
             </table>
           </div>';
@@ -397,7 +428,7 @@ function showNewUser($data = array()) {
     //Need email, first name, last name, password.
 
     print '<form class="form-signin" action ="dashboard.php?view=newUser" method ="POST" name ="new_user">
-        <h2 class="form-signin-heading">Please Enter New User Information</h2>
+        <h3 class="form-signin-heading">Please Enter New User Information</h3>
         <label for="inputEmail" class="sr-only">Email address</label>
         <input name="email"  value="' . $data["email"] . '" type="email" id="inputEmail" class="form-control" placeholder ="Email" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
