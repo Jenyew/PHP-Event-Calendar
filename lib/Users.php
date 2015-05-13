@@ -99,14 +99,14 @@ function saveUserData($data) {
         $data["errorMessage"][] = $db->errorMessage;
         return $data;
     }
-    
+
     //reload sessions info
     $_SESSION["email"] = $data["email"];
     $_SESSION["first_name"] = $data["first_name"];
     $_SESSION["last_name"] = $data["last_name"];
-    
-    
-    
+
+
+
     $data["error"] = false;
     return $data;
 }
@@ -231,7 +231,6 @@ function showAccount($data = array()) {
             }
             print "</div>";
         }
-
     } else {
         $data["email"] = $_SESSION["email"];
         $data["first_name"] = $_SESSION["first_name"];
@@ -435,12 +434,15 @@ function changePass($data) {
         $data["errorMessage"][] = "Please confirm your new password.";
     }
     if ($data["passwordNew"] !== $data["passwordNew2"]) {
-            $data["error"] = true;
-            $data["errorMessage"][] = "New passwords do not match.";
+        $data["error"] = true;
+        $data["errorMessage"][] = "New passwords do not match.";
+        $data["email"] = $_SESSION["email"];
+        $data["first_name"] = $_SESSION["first_name"];
+        $data["last_name"] = $_SESSION["first_name"];
+        return $data;
     }
-    
-    
-    
+
+
     //check if current password matches
     $db = new DB;
     $db->queryAssoc("select password from users where id = :id ", array("id" => $_SESSION["uid"]));

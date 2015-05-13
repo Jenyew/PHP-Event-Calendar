@@ -96,6 +96,10 @@ function showAllCategories($data = array()) {
         print "<tr>";
         print '<td><a href = "dashboard.php?view=category&id=' . $row["category_id"] . '" class="btn btn-xs btn-default">' . $row["title"] . '</a><td>';
         print "<td>" . $row["description"] . "</td>";
+        
+        //print delete button which calls deleteCategory method
+//        print '<td><button class="btn btn-xs btn-danger" type="" name="submit">Delete Category</button></td>';
+        print '<td><a href = "dashboard.php?view=deleteCategory&id=' . $row["category_id"] . '" class="btn btn-xs btn-danger">Delete Category</a><td>';
         print "</tr>";
     }
     print '
@@ -114,12 +118,12 @@ function createCategory($data) {
     loadPermissions();
     if (!isset($_SESSION["permissions"]["USER"]["ADMIN"])) {
         $data["error"] = true;
-        $data["errorMessage"][] = "You do not have permission to create users.";
+        $data["errorMessage"][] = "You do not have permission to create categories.";
         return $data;
     }
     if ($_SESSION["permissions"]["USER"]["ADMIN"] !== true) {
         $data["error"] = true;
-        $data["errorMessage"][] = "You do not have permission to create users.";
+        $data["errorMessage"][] = "You do not have permission to create categories.";
         return $data;
     }
     $data["error"] = false;
@@ -152,12 +156,70 @@ function createCategory($data) {
     $data["error"] = false;
     return $data;
 }
+
+function deleteCategory($typeID) {
+    //check perms
+    loadPermissions();
+    if (!isset($_SESSION["permissions"]["USER"]["ADMIN"])) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "You do not have permission to delete categories.";
+        return $data;
+    }
+    if ($_SESSION["permissions"]["USER"]["ADMIN"] !== true) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "You do not have permission to delete categories.";
+        return $data;
+    }
+    $data["error"] = false;
+    
+    
+    //checks if category to be deleted exists
+    $db = new DB;
+    $db->queryAssoc('SELECT title FROM category_types WHERE category_id = :typeid ', array("typeid" => $typeID));
+    if ($db->count < 1) {
+        print '<h1 class="page-header"> ERROR:</h1> <p>It appears you are trying to delete a category that does not exist.';
+        return;
+    }
+    
+    
+    //deletes category if it exists
+    $db->sqlsave('DELETE FROM category_types WHERE category_id = :id ', array("id" => $typeID));
+    if ($db->error) {
+        $data["error"] = true;
+        $data["errorMessage"][] = $db->errorMessage;
+        return $data;
+    }
+    $db->sqlsave('DELETE FROM category_assigned WHERE category_id = :id ', array("id" => $typeID));
+    if ($db->error) {
+        $data["error"] = true;
+        $data["errorMessage"][] = $db->errorMessage;
+        return $data;
+    }
+    $data["notice"] = "<div class=\"alert alert-info\" role=\"alert\">Category has been deleted!</div>";
+    return $data;
+}
+
+function showDeleteCategory($id) {
+    print '<h1 class="page-header">Delete Category</h1>';
+    $data = deleteCategory($id);
+    if ($data["error"]) {
+        print "<div class=\"alert alert-danger\" role=\"alert\">";
+        foreach ($data["errorMessage"] as $message) {
+            print $message . "<br />";
+        }
+        print "</div>";
+    } else {
+        print $data["notice"];
+    }
+    return;
+}
+
 function showCategory($id) {
     $db = new DB;
-    $db->queryAssoc('select title from category_types where category_id = :id ', array("id" => $id));
+    $db->queryAssoc('SELECT title FROM category_types WHERE category_id = :id ', array("id" => $id));
     //check if the category id is valid
     if ($db->count < 1) {
-        print '<h1 class="page-header"> Invaid Category ID</h1> <p>The category you are looking for doesn\'t seem to exist.';
+        print '<h1 class="page-header"> Invaid Category ID</h1> <p>The category you are looking for does not seem to exist.';
         return;
     }
     //print header for page with category title

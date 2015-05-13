@@ -25,6 +25,8 @@ if (isset($_GET["view"])) {
         $currentNav = "newUser";
     } else if ($_GET["view"] === "category") {
         $currentNav = "category";
+    } else if ($_GET["view"] === "deleteCategory") {
+        $currentNav = "deleteCategory";
     } else if ($_GET["view"] === "editEvent") {
         $currentNav = "editEvent";
     } else {
@@ -87,7 +89,7 @@ if (isset($_GET["view"])) {
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Event Calendar</a>
+                    <a class="navbar-brand" href="index.php">Event Calendar</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -202,6 +204,8 @@ if (isset($_GET["view"])) {
                             }
                         } else if ($_GET["view"] === "category") {
                             showCategory($_GET["id"]);
+                        } else if ($_GET["view"] === "deleteCategory") {
+                            showDeleteCategory($_GET["id"]);
                         } else {
                             print '<h1 class="page-header">Overview</h1>';
                         }
