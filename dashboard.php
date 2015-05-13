@@ -9,8 +9,8 @@ if (!isset($_SESSION["uid"])){
 }
 //Check the page we're looking at.
 if (isset($_GET["view"])) {
-    if ($_GET["view"] === "profile") {
-        $currentNav = "profile";
+    if ($_GET["view"] === "deleteUser") {
+        $currentNav = "deleteUser";
     } else if ($_GET["view"] === "addEvent") {
         $currentNav = "addEvent";
     } else if ($_GET["view"] === "allEvents") {
@@ -157,9 +157,14 @@ if (isset($_GET["view"])) {
 
                     <?php
                     if (isset($_GET["view"])) {
-                        if ($_GET["view"] === "profile") {
-                            print '<h1 class="page-header">Profile</h1>';
-                            showProfile();
+                        if ($_GET["view"] === "deleteUser") {
+                            print '<h1 class="page-header">Delete User</h1>';
+                            print '<h3 class="page-header">Are you sure you would like to delete this user?</h3>';
+//                            print '';
+//                            if () {
+//                                deleteUser($uID);
+//                              }
+                            
                         } else if ($_GET["view"] === "addEvent") {
                             if (isset($_POST["submit"])) {
                                 print '<h1 class="page-header">Add New Event</h1>';

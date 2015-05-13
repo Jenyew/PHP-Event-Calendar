@@ -164,6 +164,16 @@ function createUser($data) {
     if ($data["error"]) {
         return $data;
     }
+    //check if email already exists
+    $db = new DB;
+    $db->queryAssoc("select * from users where email = :email ", array("email" => $data["email"]));
+    //If the email exists, it will return a row and count would be 1.
+    if ($db->count > 0) {
+        $data["error"] = true;
+        $data["errorMessage"][] = "Email already used.";
+        return $data;
+    }
+    
     $db = new DB;
     //$params will be safely injected into the query where :index = the value of that index in the array.
     $params = array("email" => $data["email"],
@@ -186,38 +196,32 @@ function deleteUser($uID) {
     loadPermissions();
     if (!isset($_SESSION["permissions"]["USER"]["ADMIN"])) {
         $data["error"] = true;
-        $data["errorMessage"][] = "You do not have permission to delete categories.";
+        $data["errorMessage"][] = "You do not have permission to delete users.";
         return $data;
     }
     if ($_SESSION["permissions"]["USER"]["ADMIN"] !== true) {
         $data["error"] = true;
-        $data["errorMessage"][] = "You do not have permission to delete categories.";
+        $data["errorMessage"][] = "You do not have permission to delete users.";
         return $data;
     }
     $data["error"] = false;
     
     //checks if category to be deleted exists
     $db = new DB;
-    $db->queryAssoc('SELECT title FROM category_types WHERE category_id = :typeid ', array("typeid" => $typeID));
+    $db->queryAssoc('SELECT email FROM users WHERE id = :id ', array("id" => $uID));
     if ($db->count < 1) {
-        print '<h1 class="page-header"> ERROR:</h1> <p>It appears you are trying to delete a category that does not exist.';
+        print '<h1 class="page-header"> ERROR:</h1> <p>It appears you are trying to delete a user that does not exist.';
         return;
     }
     
-    //deletes category if it exists
-    $db->sqlsave('DELETE FROM category_types WHERE category_id = :id ', array("id" => $typeID));
+    //deletes user if they exist
+    $db->sqlsave('DELETE FROM users WHERE id = :id ', array("id" => $uID));
     if ($db->error) {
         $data["error"] = true;
         $data["errorMessage"][] = $db->errorMessage;
         return $data;
     }
-    $db->sqlsave('DELETE FROM category_assigned WHERE category_id = :id ', array("id" => $typeID));
-    if ($db->error) {
-        $data["error"] = true;
-        $data["errorMessage"][] = $db->errorMessage;
-        return $data;
-    }
-    $data["notice"] = "<div class=\"alert alert-info\" role=\"alert\">Category has been deleted!</div>";
+    $data["notice"] = "<div class=\"alert alert-info\" role=\"alert\">User has been deleted!</div>";
     return $data;
 }
 
