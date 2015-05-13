@@ -384,8 +384,8 @@ if (isset($_GET["view"])) {
           { format: "%Y-%m-%d %T", 
             firstDOW: 1 ,
             formatUtcOffset: "%: (%@)",
-            hideInput: true//,
-            //placement: "inline"
+            hideInput: true,
+            placement: "inline"
           }
         );
 
@@ -393,8 +393,8 @@ if (isset($_GET["view"])) {
           { format: "%Y-%m-%d %T", 
             firstDOW: 1 ,
             formatUtcOffset: "%: (%@)",
-            hideInput: true//,
-            //placement: "inline"
+            hideInput: true,
+            placement: "inline"
           }
         );
        
