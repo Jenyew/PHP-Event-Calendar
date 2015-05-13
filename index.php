@@ -9,7 +9,7 @@
         <meta name="author" content="">
         <!--<link rel="icon" href="../../favicon.ico">-->
 
-        <title>Justified Nav Template for Bootstrap</title>
+        <title>PHP Event Calendar</title>
 
         <!-- Bootstrap core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -17,7 +17,75 @@
         <!-- Custom styles for this template -->
         <link href="css/justified-nav.css" rel="stylesheet">
 
+        <!-- FullCalendar -->
+        <link rel='stylesheet' href='css/fullcalendar.css' />
+        <script src='js/jquery.js'></script>
+        <script src='js/moment.js'></script>
+        <script src='js/fullcalendar.min.js'></script>
+        
+        <link rel='stylesheet' href='css/jquery.qtip.css' />
+        <script src='js/jquery.qtip.min.js'></script>
+        
 
+        
+        <script>
+            $(document).ready(function() {
+
+                // page is now ready, initialize the calendar...
+
+                $('#calendar').fullCalendar({
+                    // put your options and callbacks here
+                    events: [
+                        <?php
+                        //load all events
+                        
+                        //set $first true
+                        
+                        //foreach
+                            //if first { set first = false;
+                            //} else { print "},"; }
+                            //print all array elements
+                        //end foreach
+                        //print "}";
+                        
+                        ?>
+                        {
+                            id     : '1',
+                            title  : 'event1',
+                            start  : '2015-05-13',
+                            //url    : 'index.php?event=1',
+                            description: 'This is a cool event'
+                        },
+                        {
+                            title  : 'event2',
+                            start  : '2015-05-13',
+                            end    : '2015-05-14'
+                        },
+                        {
+                            title  : 'event2',
+                            start  : '2015-05-13',
+                            end    : '2015-05-16'
+                        },
+                        {
+                            title  : 'event3',
+                            start  : '2015-05-13T12:30:00',
+                            allDay : false // will make the time show
+                        }
+                    ],
+                    eventRender: function(event, element) {
+                        element.qtip({
+                            content: event.description
+                        });
+                    }
+                })
+
+            });
+        </script>
+        
+ 
+            
+            
+        
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -32,8 +100,16 @@
             <!-- The justified navigation menu is meant for single line per list item.
                  Multiple lines will require custom code not provided by Bootstrap. -->
             <div class="masthead">
-                <h3 class="text-muted">Project name</h3>
-                <nav>
+                 <div class="row">
+                    <div class="col-lg-8">
+                        <h3 class="text-muted">PHP Event Calendar <span style="font-size: 0.5em; font-style: italic;">//By Robbert Press</span></h3>
+                    </div>
+                     <div class="col-lg-4" style="text-align: right;">
+                        <a href = "dashboard.php" class="btn btn-lg btn-primary ">Log In</a>
+                    </div>
+                 </div>
+                
+<!--                <nav>
                     <ul class="nav nav-justified">
                         <li class="active"><a href="#">Home</a></li>
                         <li><a href="#">Projects</a></li>
@@ -42,18 +118,19 @@
                         <li><a href="#">About</a></li>
                         <li><a href="#">Contact</a></li>
                     </ul>
-                </nav>
+                </nav>-->
             </div>
 
             <!-- Jumbotron -->
             <div class="jumbotron">
-                <h1>Marketing stuff!</h1>
+                <div id='calendar'></div>
+<!--                <h1>Marketing stuff!</h1>
                 <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet.</p>
-                <p><a class="btn btn-lg btn-success" href="#" role="button">Get started today</a></p>
+                <p><a class="btn btn-lg btn-success" href="#" role="button">Get started today</a></p>-->
             </div>
 
             <!-- Example row of columns -->
-            <div class="row">
+<!--            <div class="row">
                 <div class="col-lg-4">
                     <h2>Safari bug warning!</h2>
                     <p class="text-danger">As of v8.0, Safari exhibits a bug in which resizing your browser horizontally causes rendering errors in the justified nav that are cleared upon refreshing.</p>
@@ -70,11 +147,11 @@
                     <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
                     <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
                 </div>
-            </div>
+            </div>-->
 
             <!-- Site footer -->
             <footer class="footer">
-                <p>&copy; Company 2014</p>
+                <p>&copy; Robbert Press 2015</p>
             </footer>
 
         </div> <!-- /container -->

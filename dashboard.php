@@ -378,7 +378,15 @@ if (isset($_GET["view"])) {
         <script src="js/ie10-viewport-bug-workaround.js"></script>
         <script>
         AnyTime.picker( "field1",
-          { format: "%W, %M %D, %z - %h:%i %p", firstDOW: 1 } );
+          { format: "%W, %M %D, %z - %h:%i %p", 
+            firstDOW: 1 ,
+            formatUtcOffset: "%: (%@)",
+            hideInput: true,
+            placement: "inline"
+            
+            
+            
+          });
        
         </script>
 <!--        <script>
