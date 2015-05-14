@@ -158,12 +158,7 @@ if (isset($_GET["view"])) {
                     <?php
                     if (isset($_GET["view"])) {
                         if ($_GET["view"] === "deleteUser") {
-                            print '<h1 class="page-header">Delete User</h1>';
-                            print '<h3 class="page-header">Are you sure you would like to delete this user?</h3>';
-//                            print '';
-//                            if () {
-//                                deleteUser($uID);
-//                              }
+                            $data = showDeleteUser($_GET["id"]);
                             
                         } else if ($_GET["view"] === "addEvent") {
                             if (isset($_POST["submit"])) {

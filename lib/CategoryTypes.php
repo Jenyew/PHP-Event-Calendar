@@ -46,7 +46,7 @@ function showAllCategories($data = array()) {
         <textarea rows="2" name="description" class="responsive-input" placeholder="Category Description" required>' . $data["description"] . '</textarea>
         <button class="btn btn-lg btn-primary" type="submit" name="submit">Create Category</button>
       </form>';
-//    return $data;
+
     print '
           <h3 class="sub-header">All Categories</h3>
           <div class="table-responsive">

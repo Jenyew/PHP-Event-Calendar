@@ -36,7 +36,7 @@ function logIn($email, $pass) {
         //Checks if password entered matches actual password taken from database.
         //check if user account is active
         if (!$result["active"]) {
-            return array("success" => false, "errorMessage" => "This account has been disabled. Please contact and administrator.");
+            return array("success" => false, "errorMessage" => "This account has been disabled. Please contact an administrator.");
         }
 
         //check if account has expired
@@ -191,6 +191,42 @@ function createUser($data) {
     return $data;
 }
 
+function showDeleteUser($uID) {
+    //clear errors
+    $data["error"] = false;
+    $data["notice"] = false;
+    if ($_POST == array()) {
+        print '<form class="form-deleteUser" action ="dashboard.php?view=deleteUser&id=' . $_GET["id"] . '" method ="POST" name ="delete_user">
+            <h1 class="form-deleteUser-heading">Delete User</h1>
+            <h3 class="form-deleteUser-heading">Are you sure you would like to delete this user? This cannot be undone!</h3>
+            <h2 class="form-deleteUser-heading"> </h2>
+            <button class="btn btn-lg btn-danger" type="submit" value="delete" name="submit">Confirm</button>
+            <a href = "dashboard.php?view=users" class="btn btn-lg btn-info">Cancel</a>
+            </form>';
+    }
+    if ($_POST !== array()) {
+        if ($_POST["submit"] == "delete") {
+        $data = deleteUser($uID);
+        }
+    }
+    
+    if ($data["error"]) {
+        print "<div class=\"alert alert-danger\" role=\"alert\">";
+        foreach ($data["errorMessage"] as $message) {
+            print $message . "<br />";
+        }
+        print "</div>";
+        print '<br /><a href = "dashboard.php?view=users" class="btn btn-lg btn-info">Back</a>';
+    } else {
+        print $data["notice"];
+        if ($data["notice"] === "<div class=\"alert alert-info\" role=\"alert\">User has been deleted!</div>") {
+        print '<a href = "dashboard.php?view=users" class="btn btn-lg btn-info">Back</a>';
+        }
+    }
+    return;
+}
+
+
 function deleteUser($uID) {
     //Delete user row in database.
     loadPermissions();
@@ -207,6 +243,7 @@ function deleteUser($uID) {
     $data["error"] = false;
     
     //checks if category to be deleted exists
+    
     $db = new DB;
     $db->queryAssoc('SELECT email FROM users WHERE id = :id ', array("id" => $uID));
     if ($db->count < 1) {
@@ -358,7 +395,6 @@ function showNewUser($data = array()) {
             print $message . "<br />";
         }
 
-
         print "</div>";
         return $data;
     }
@@ -415,6 +451,9 @@ function showNewUser($data = array()) {
         }
         if (!$data["error"]) {
             print "Thank you, user has been created.<br />";
+            print "<br />";
+            print "<br />";
+            print '<a href = "dashboard.php?view=newUser" class="btn btn-lg btn-info">Back</a>';
             return $data;
         }
         print "<div class=\"alert alert-danger\" role=\"alert\">";
