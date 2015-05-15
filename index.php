@@ -1,3 +1,6 @@
+<?php
+    include("lib/Init.php");
+    ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -38,7 +41,6 @@
                     events: [
                         <?php
                         //load all events
-                        include("lib/Init.php");
                         $db = new DB;
                         $db->queryAssoc("SELECT * FROM events");
                         $results = $db->resultsArray;
@@ -55,14 +57,14 @@
                                 print "},";
                             }
                             //print all array elements
-                            print "id     : " . "'" . $result["id"] . "'" . ",<br />";
-                            print "title  : " . "'" . $result["title"] . "'" . ",<br />";
-                            print "start  : " . "'" . $result["start"] . "'" . ",<br />";
-                            print "end    : " . "'" . $result["end"] . "'" . ",<br />";
+                            print "id     : " . "'" . $result["id"] . "'" . ",";
+                            print "title  : " . "'" . $result["title"] . "'" . ",";
+                            print "start  : " . "'" . $result["start"] . "'" . ",";
+                            print "end    : " . "'" . $result["end"] . "'" . ",";
                             print "description: " . "'" . $result["description"] . "'";
                         }
                         //end foreach
-                        print "}";
+                        print "},";
                         
                         ?>
                         {
