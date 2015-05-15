@@ -113,7 +113,7 @@ function showAddEvent($data = array()) {
             print "Thank you, event has been created.<br />";
             print "<br />";
             print "<br />";
-            print '<a href = "dashboard.php?view=newUser" class="btn btn-lg btn-info">Back</a>';
+            print '<a href = "dashboard.php?view=addEvent" class="btn btn-lg btn-info">Back</a>';
             return $data;
         }
         print "<div class=\"alert alert-danger\" role=\"alert\">";
