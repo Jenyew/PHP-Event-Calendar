@@ -137,7 +137,6 @@ function showAddEvent($data = array()) {
 
 function showAllEvents() {
     //Show all events in main part of dashboard.
-
     //Todays Events
     print '
           <h3 class="sub-header">Events Today</h3>
@@ -189,7 +188,7 @@ function showAllEvents() {
 
     //All events today or after
     print '
-          <h3 class="sub-header">All New Events</h3>
+          <h3 class="sub-header">All Events</h3>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>

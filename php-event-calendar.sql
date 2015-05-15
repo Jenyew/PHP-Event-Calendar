@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 30, 2015 at 05:32 AM
+-- Generation Time: May 15, 2015 at 02:57 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -31,7 +31,16 @@ CREATE TABLE IF NOT EXISTS `category_assigned` (
   `category_id` smallint(5) unsigned NOT NULL,
   `event_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`handle`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `category_assigned`
+--
+
+INSERT INTO `category_assigned` (`handle`, `category_id`, `event_id`) VALUES
+(1, 1, 1),
+(2, 2, 1),
+(4, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -42,9 +51,21 @@ CREATE TABLE IF NOT EXISTS `category_assigned` (
 CREATE TABLE IF NOT EXISTS `category_types` (
   `category_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `descrption` text NOT NULL,
+  `description` text NOT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+
+--
+-- Dumping data for table `category_types`
+--
+
+INSERT INTO `category_types` (`category_id`, `title`, `description`) VALUES
+(1, '10th Grade', 'stuff'),
+(2, 'Staff', 'Staff'),
+(3, 'Test 1', 'Test Category 1'),
+(4, 'Test 2', 'Test Category 2'),
+(5, 'Test 3', 'Test'),
+(8, 'Test 5', 'Long Description Test: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 
 -- --------------------------------------------------------
 
@@ -61,7 +82,15 @@ CREATE TABLE IF NOT EXISTS `events` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Event Creation Time',
   `author` smallint(5) unsigned NOT NULL COMMENT 'Event Author User ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `events`
+--
+
+INSERT INTO `events` (`id`, `title`, `description`, `start`, `end`, `created`, `author`) VALUES
+(1, 'Test Event 1', 'Test', '2015-05-03 16:00:00', '2015-05-03 16:30:00', '2015-05-03 15:28:24', 1),
+(3, 'Test Event 2', 'Test', '2015-05-09 00:00:00', '2015-05-10 00:00:00', '2015-05-08 13:54:21', 1);
 
 -- --------------------------------------------------------
 
@@ -105,15 +134,19 @@ CREATE TABLE IF NOT EXISTS `users` (
   `active` tinyint(1) NOT NULL COMMENT 'If the account is active',
   `expires` datetime DEFAULT NULL COMMENT 'When the account expires',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `email`, `firstName`, `lastName`, `password`, `created`, `lastLogin`, `active`, `expires`) VALUES
-(1, 'test@test.com', 'John', 'Smith', 'Password1', '2015-04-23 17:36:20', NULL, 1, NULL),
-(2, 'test2@test.com', 'Jane', 'Smith', 'password2', '2015-04-23 17:52:29', NULL, 1, NULL);
+(1, 'admin@test.com', 'ADMIN', 'ADMIN', '$2y$10$PjLnekS72iDNSYBGdQSqJe6gWNfXQb.YM.d9fW85hp2xJSL2mhX8q', '2015-04-23 17:36:20', NULL, 1, NULL),
+(2, 'test2@test.com', 'User2', 'uid=2', '$2y$10$zG8Dh/v9QgXgckdHrZ5gTeokkroz3pf9sssMl/9IfgZEFaDXrrluC', '2015-04-23 17:52:29', NULL, 1, NULL),
+(17, 'test3@test.com', 'User', '3', '$2y$10$bSqqKYDMQbIo.PdzogcJF.HKaxprEso2sgQCLwj1jCV6AwrkpmKh.', '2015-05-13 22:46:16', NULL, 1, NULL),
+(18, 'test4@test.com', 'User', '4', '$2y$10$C1vEfueHrmoyP8TV/BSr4es.TodDQwJBW/ey4mmIqN3HsrZY8Okd6', '2015-05-13 22:46:29', NULL, 1, NULL),
+(19, 'test5@test.com', 'User', '5', '$2y$10$1n7Rw2tal4PcVDLB/Yb.bew34tSOMJeurjQF6p/eMXdL.t6ZBN6WW', '2015-05-13 22:46:42', NULL, 1, NULL),
+(20, 'test6@test.com', 'User', '6', '$2y$10$d1Hpwl1qvL.vXRa7lkeQsOjLtEGeC9V2vMXiH68LgTPCsKZIdJG4K', '2015-05-13 22:49:26', NULL, 1, NULL);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

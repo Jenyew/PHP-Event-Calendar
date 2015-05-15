@@ -21,7 +21,6 @@ function showAllCategories($data = array()) {
         }
         if (!$data["error"]) {
             $data = createCategory($data);
-            
         }
         if (!$data["error"]) {
             print "Thank you, category has been created.<br />";
@@ -37,7 +36,7 @@ function showAllCategories($data = array()) {
         $data["title"] = "";
         $data["description"] = "";
     }
-    
+
     print '<form class="form-createCategory" action ="dashboard.php?view=allCategories" method ="POST" name ="add_category">
         <h3 class="form-createCategory-heading">Create New Category</h3>
         <label for="inputTitle" class="sr-only">Category Title</label>
@@ -71,7 +70,7 @@ function showAllCategories($data = array()) {
         print "<tr>";
         print '<td><a href = "dashboard.php?view=category&id=' . $row["category_id"] . '" class="btn btn-xs btn-default">' . $row["title"] . '</a></td>';
         print "<td style=\"text-align: left;\">" . $row["description"] . "</td>";
-        
+
         //print delete button which calls deleteCategory method
 //        print '<td><button class="btn btn-xs btn-danger" type="" name="submit">Delete Category</button></td>';
         print '<td><a href = "dashboard.php?view=deleteCategory&id=' . $row["category_id"] . '" class="btn btn-xs btn-danger">Delete Category</a></td>';
@@ -81,8 +80,8 @@ function showAllCategories($data = array()) {
               </tbody>
             </table>
           </div>';
-
 }
+
 function createCategory($data) {
     if ($data == array()) {
         $data["error"] = true;
@@ -116,7 +115,7 @@ function createCategory($data) {
     if ($data["error"]) {
         return $data;
     }
-    
+
     $db = new DB;
     //$params will be safely injected into the query where :index = the value of that index in the array.
     $params = array("title" => $data["title"],
@@ -146,7 +145,7 @@ function deleteCategory($typeID) {
         return $data;
     }
     $data["error"] = false;
-    
+
     //checks if category to be deleted exists
     $db = new DB;
     $db->queryAssoc('SELECT title FROM category_types WHERE category_id = :typeid ', array("typeid" => $typeID));
@@ -154,7 +153,7 @@ function deleteCategory($typeID) {
         print '<h1 class="page-header"> ERROR:</h1> <p>It appears you are trying to delete a category that does not exist.';
         return;
     }
-    
+
     //deletes category if it exists
     $db->sqlsave('DELETE FROM category_types WHERE category_id = :id ', array("id" => $typeID));
     if ($db->error) {
@@ -198,7 +197,7 @@ function showCategory($id) {
     //print header for page with category title
     $result = $db->resultsArray;
     print '<h1 class="page-header">All events for ' . $result[0]["title"] . '</h1>';
-    
+
     //load all events assigned to this category id
     $db = new DB;
     $db->queryAssoc('select event_id from category_assigned where category_id = :id ', array("id" => $id));
@@ -208,16 +207,16 @@ function showCategory($id) {
         return;
     }
     $result = $db->resultsArray;
-    
-    foreach ($result as $row){
+
+    foreach ($result as $row) {
         $db = new DB;
         $db->queryAssoc("select * from events where id = :id ", array("id" => $row["event_id"]));
         $tmp = $db->resultsArray[0];
-        foreach ($tmp as $key => $value){
+        foreach ($tmp as $key => $value) {
             $events[$row["event_id"]][$key] = $value;
         }
     }
-    
+
     //print a table with the events in the same way as View all Events
     print '
           <div class="table-responsive">
