@@ -59,7 +59,8 @@ function createEvent($data) {
     $params = array("title" => $data["title"],
         "description" => $data["description"],
         "start" => $data["startTime"],
-        "end" => $data["endTime"]);
+        "end" => $data["endTime"],
+        "author" => $_SESSION["uid"]   );
     $db->sqlSave("INSERT INTO events (title, description, start, end, author) VALUES ( :title , :description , :start , :end , :author ) ", $params);
 
     if ($db->error) {
@@ -94,20 +95,34 @@ function showAddEvent($data = array()) {
             $data["errorMessage"][] = "End Time must be set.";
         }
         //Need to check if start date is before end date.
-//        if (!$data["error"]) {
-//            $data = createEvent($data);
-//        }
-//        if (!$data["error"]) {
-//            print "Thank you, event has been created.<br />";
-//            return $data;
-//        }
-//        print "<div class=\"alert alert-danger\" role=\"alert\">";
-//        foreach ($data["errorMessage"] as $message) {
-//            print $message . "<br />";
-//        }
-//        
-//        
-//        print "</div>";
+        
+            $A = new DateTime(); 
+            $A->setTimestamp(strtotime($data["startTime"]));
+
+            $B = new DateTime(); 
+            $B->setTimestamp(strtotime($data["endTime"])); 
+
+        if ($A > $B) {
+            $data["error"] = true;
+            $data["errorMessage"][] = "Start Time must be before End Time.";
+        }
+        if (!$data["error"]) {
+            $data = createEvent($data);
+        }
+        if (!$data["error"]) {
+            print "Thank you, event has been created.<br />";
+            print "<br />";
+            print "<br />";
+            print '<a href = "dashboard.php?view=newUser" class="btn btn-lg btn-info">Back</a>';
+            return $data;
+        }
+        print "<div class=\"alert alert-danger\" role=\"alert\">";
+        foreach ($data["errorMessage"] as $message) {
+            print $message . "<br />";
+        }
+
+
+        print "</div>";
     } else {
         $data["title"] = "";
         $data["description"] = "";
@@ -158,8 +173,6 @@ function showAllEvents() {
 //              </tbody>
 //            </table>
 //          </div>';
-
-
     //This week's Events
 //    print '
 //          <h3 class="sub-header">Events This Week</h3>
@@ -184,8 +197,6 @@ function showAllEvents() {
 //              </tbody>
 //            </table>
 //          </div>';
-
-
     //All events today or after
     print '
           <h3 class="sub-header">All Events</h3>

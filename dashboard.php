@@ -377,8 +377,10 @@ if (isset($_GET["view"])) {
         <script>
             AnyTime.picker("field1",
                     {format: "%Y-%m-%d %T",
+                        labelTitle: "Event Start:",
                         firstDOW: 1,
                         formatUtcOffset: "%: (%@)",
+                        askSecond: false,
                         hideInput: true,
                         placement: "inline"
                     }
@@ -386,8 +388,10 @@ if (isset($_GET["view"])) {
 
             AnyTime.picker("field2",
                     {format: "%Y-%m-%d %T",
+                        labelTitle: "Event End:",
                         firstDOW: 1,
                         formatUtcOffset: "%: (%@)",
+                        askSecond: false,
                         hideInput: true,
                         placement: "inline"
                     }
