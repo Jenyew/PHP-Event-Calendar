@@ -38,15 +38,31 @@
                     events: [
                         <?php
                         //load all events
-                        
+                        include("lib/Init.php");
+                        $db = new DB;
+                        $db->queryAssoc("SELECT * FROM events");
+                        $results = $db->resultsArray;
                         //set $first true
-                        
+                        $first = true;
                         //foreach
+                        foreach ($results as $result) {
                             //if first { set first = false;
+                            if ($first) {
+                                $first = false;
+                            }
                             //} else { print "},"; }
+                            else {
+                                print "},";
+                            }
                             //print all array elements
+                            print "id     : " . "'" . $result["id"] . "'" . ",<br />";
+                            print "title  : " . "'" . $result["title"] . "'" . ",<br />";
+                            print "start  : " . "'" . $result["start"] . "'" . ",<br />";
+                            print "end    : " . "'" . $result["end"] . "'" . ",<br />";
+                            print "description: " . "'" . $result["description"] . "'";
+                        }
                         //end foreach
-                        //print "}";
+                        print "}";
                         
                         ?>
                         {

@@ -265,7 +265,7 @@ function showEditUser($oUID, $data = array()) {
     $db = new DB;
     $db->queryAssoc('SELECT * FROM users WHERE id = :id ', array("id" => $oUID));
     $result = $db->resultsArray[0];
-    
+
     if ($data !== array()) {
         //clear errors
         $data["error"] = false;
@@ -299,9 +299,9 @@ function showEditUser($oUID, $data = array()) {
             print "</div>";
         }
     }
-    
-    
-    
+
+
+
     print '<form class="form-editUser" action ="dashboard.php?view=editUser&id=' . $oUID . '" method ="POST" name ="edit_user">
         <h3 class="form-signin-heading">Use this form to edit the user\'s account info.</h3>
         <label for="inputEmail" class="sr-only">Email address</label>
@@ -335,7 +335,6 @@ function showEditUser($oUID, $data = array()) {
         <button class="btn btn-lg btn-primary" type="submit" value="pass" name="submit">Change User\'s Password</button>
       </form>';
     return $data;
-    
 }
 
 function editUser($oUID, $data) {
@@ -351,7 +350,7 @@ function editUser($oUID, $data) {
         return $data;
     }
     $data["error"] = false;
-    
+
     if ($data['submit'] === "info") {
         $data["email"] = trim($data["email"]);
         $data["first_name"] = trim($data["first_name"]);
@@ -381,16 +380,13 @@ function editUser($oUID, $data) {
         } else {
             $active = false;
         }
-        
+
         $params = array("id" => $oUID,
             "email" => $data["email"],
             "firstName" => $data["first_name"],
             "lastName" => $data["last_name"],
             "active" => $active);
-        print "<pre>";
-    print_r ($data);
-    print "</pre>";
-        
+
         $db->sqlSave("UPDATE users SET email = :email, firstName = :firstName, lastName = :lastName, active = :active WHERE id = :id ", $params);
 
         if ($db->error) {
@@ -408,7 +404,7 @@ function editUser($oUID, $data) {
 
         $data["error"] = false;
         return $data;
-        }
+    }
     if ($data['submit'] === "pass") {
         //validate $data
         $data["password"] = trim($data["password"]);
@@ -577,6 +573,7 @@ function showUsers($data = array()) {
         return "</tbody></table></div>";
     }
     $result = $db->resultsArray;
+    
     foreach ($result as $row) {
         print "<tr>";
         print "<td>" . $row["email"] . "</td>";

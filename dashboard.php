@@ -173,13 +173,12 @@ if (isset($_GET["view"])) {
                             print '<h1 class="page-header">All Events</h1>';
                             showAllEvents();
                         } else if ($_GET["view"] === "editUser") {
-                            
-                                print '<h1 class="page-header">Edit User</h1>';
-                                $data = showEditUser($_GET["id"], $_POST);
-                            
+
+                            print '<h1 class="page-header">Edit User</h1>';
+                            $data = showEditUser($_GET["id"], $_POST);
                         } else if ($_GET["view"] === "allCategories") {
                             print '<h1 class="page-header">Categories</h1>';
-                            $data = showAllCategories($_GET["id"]);
+                            $data = showAllCategories($_POST);
                         } else if ($_GET["view"] === "account") {
                             if (isset($_POST["submit"])) {
                                 print '<h1 class="page-header">Account Settings</h1>';
