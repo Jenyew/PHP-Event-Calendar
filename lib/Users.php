@@ -276,6 +276,7 @@ function showEditUser($oUID, $data = array()) {
             $data = editUser($result["id"], $data);
             if (!$data["error"]) {
                 print "Thank you, user's account information has been updated.<br />";
+                print '<br /><a href = "dashboard.php?view=users" class="btn btn-lg btn-info">Back</a>';
                 return $data;
             }
             print "<div class=\"alert alert-danger\" role=\"alert\">";
@@ -290,6 +291,7 @@ function showEditUser($oUID, $data = array()) {
             $data = editUser($result["id"], $data);
             if (!$data["error"]) {
                 print "Thank you, user's password has been updated.<br />";
+                print '<br /><a href = "dashboard.php?view=users" class="btn btn-lg btn-info">Back</a>';
                 return $data;
             }
             print "<div class=\"alert alert-danger\" role=\"alert\">";
@@ -312,9 +314,9 @@ function showEditUser($oUID, $data = array()) {
         <input name="last_name" value="' . $result["lastName"] . '" type="text" id="inputLastName" class="form-control" placeholder="Last Name" required>
         <div class="checkbox">';
     if ($result["active"] === "1") {
-        print '<input type="radio" name="active" checked>Active<input type="radio" name="active">Inactive';
+        print '<input type="radio" name="active" value="active" checked>Active<br /><input type="radio" name="active" value="inactive">Inactive';
     } else {
-        print '<input type="radio" name="active" value="active">Active<input type="radio" name="active" value="inactive" checked>Inactive';
+        print '<input type="radio" name="active" value="active">Active<br /><input type="radio" name="active" value="inactive" checked>Inactive';
     }
     print '</div>
         <button class="btn btn-lg btn-primary" type="submit" value="info" name="submit">Update User\'s Account</button>
@@ -491,6 +493,7 @@ function showAccount($data = array()) {
             $data = saveUserData($data);
             if (!$data["error"]) {
                 print "Thank you, account information has been updated.<br />";
+                print '<br /><a href = "dashboard.php?view=account" class="btn btn-lg btn-info">Back</a>';
                 return $data;
             }
             print "<div class=\"alert alert-danger\" role=\"alert\">";
@@ -505,6 +508,7 @@ function showAccount($data = array()) {
             $data = changePass($data);
             if (!$data["error"]) {
                 print "Thank you, password has been updated.<br />";
+                print '<br /><a href = "dashboard.php?view=account" class="btn btn-lg btn-info">Back</a>';
                 return $data;
             }
             print "<div class=\"alert alert-danger\" role=\"alert\">";

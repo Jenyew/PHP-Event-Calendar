@@ -204,9 +204,11 @@ if (isset($_GET["view"])) {
                             showDeleteCategory($_GET["id"]);
                         } else {
                             print '<h1 class="page-header">Overview</h1>';
+                            print '<h4 class="sub-header">Click something  to the left to do something.<br /><br />Or click on Event Calendar to return to the calendar.</h4>';
                         }
                     } else {
                         print '<h1 class="page-header">Overview</h1>';
+                        print '<h4 class="sub-header">Click something  to the left to do something.<br /> Or click on Event Calendar to return to the calendar.</h4>';
                     }
                     ?>
                     <!--
