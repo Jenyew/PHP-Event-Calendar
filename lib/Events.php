@@ -138,52 +138,52 @@ function showAddEvent($data = array()) {
 function showAllEvents() {
     //Show all events in main part of dashboard.
     //Todays Events
-    print '
-          <h3 class="sub-header">Events Today</h3>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Start Time</th>
-                  <th>End Time</th>
-                  <th>Category</th>
-                  <th> </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                
-                </tr>
-              </tbody>
-            </table>
-          </div>';
+//    print '
+//          <h3 class="sub-header">Events Today</h3>
+//          <div class="table-responsive">
+//            <table class="table table-striped">
+//              <thead>
+//                <tr>
+//                  <th>Title</th>
+//                  <th>Start Time</th>
+//                  <th>End Time</th>
+//                  <th>Category</th>
+//                  <th> </th>
+//                </tr>
+//              </thead>
+//              <tbody>
+//                <tr>
+//                
+//                </tr>
+//              </tbody>
+//            </table>
+//          </div>';
 
 
     //This week's Events
-    print '
-          <h3 class="sub-header">Events This Week</h3>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Start Time</th>
-                  <th>End Time</th>
-                  <th>Category</th>
-                  <th> </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                
-                </tr>
-                <tr>
-                
-                </tr>
-              </tbody>
-            </table>
-          </div>';
+//    print '
+//          <h3 class="sub-header">Events This Week</h3>
+//          <div class="table-responsive">
+//            <table class="table table-striped">
+//              <thead>
+//                <tr>
+//                  <th>Title</th>
+//                  <th>Start Time</th>
+//                  <th>End Time</th>
+//                  <th>Category</th>
+//                  <th> </th>
+//                </tr>
+//              </thead>
+//              <tbody>
+//                <tr>
+//                
+//                </tr>
+//                <tr>
+//                
+//                </tr>
+//              </tbody>
+//            </table>
+//          </div>';
 
 
     //All events today or after

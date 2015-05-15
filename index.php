@@ -57,6 +57,7 @@
                                 print "},";
                             }
                             //print all array elements
+                            print "{";
                             print "id     : " . "'" . $result["id"] . "'" . ",";
                             print "title  : " . "'" . $result["title"] . "'" . ",";
                             print "start  : " . "'" . $result["start"] . "'" . ",";
